@@ -26,9 +26,9 @@ also should install git
 ```
 sudo yum install git
 ```
-and twitter bootstrap
+Make sure to configure it, i.e. user.name, user.email, and add ssh key. Also get twitter bootstrap.
 ```
-http://getbootstrap.com/2.3.2/assets/bootstrap.zip
+wget https://github.com/twbs/bootstrap/releases/download/v3.3.4/bootstrap-3.3.4-dist.zip
 ```
 
 
