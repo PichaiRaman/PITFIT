@@ -10,6 +10,7 @@
 library("limma");
 library("scales");
 library("ggplot2");
+library("pheatmap");
 
 #Read in data
 expData <- read.delim("../data/ovarianData.txt");
@@ -83,6 +84,13 @@ plotVolcanoTrain <- function(result, hitp=.05, hitlfc=1)
 result[,"HIT"] <- result[,"adj.P.Val"]<hitp&abs(result[,"logFC"])>hitlfc;
 p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=HIT))+geom_point()+ scale_y_continuous(trans=reverselog_trans(10))+theme_bw();
 return(p);
+}
+
+plotHeatmap <- function(hits, myData)
+{
+myRows <- rownames(hits);
+myHM <- myData[myRows,];
+hmPlot <- pheatmap(myHM);
 }
 
 
