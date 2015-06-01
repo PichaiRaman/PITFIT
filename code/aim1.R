@@ -6,6 +6,11 @@
 #5/31/2015
 ##############################
 
+#call libraries
+library("limma");
+library("scales");
+library("ggplot2");
+
 #Read in data
 expData <- read.delim("../data/ovarianData.txt");
 annotData <- read.delim("../data/ovarianDataAnnot.txt");
@@ -56,6 +61,25 @@ tmpLimmaOut <- tmpLimmaOut[abs(tmpLimmaOut[,"logFC"])>logFCThresh,];
 tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
 
 
+}
+
+#accessory for volcano plot
+reverselog_trans <- function(base = exp(1)) {
+  trans <- function(x) -log(x, base)
+  inv <- function(x) base^(-x)
+  trans_new(paste0("reverselog-", format(base)), trans, inv, 
+  log_breaks(base = base), 
+  domain = c(1e-100, Inf))
+}
+
+
+#volcano plot, takes in limma analysis
+plotVolcanoTrain <- function(result, hitp=.05, hitlfc=1)
+{
+
+result[,"HIT"] <- result[,"adj.P.Val"]<hitp&abs(result[,"logFC"])>hitlfc;
+p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=HIT))+geom_point()+ scale_y_continuous(trans=reverselog_trans(10));
+return(p);
 }
 
 
