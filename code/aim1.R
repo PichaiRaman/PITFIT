@@ -51,7 +51,7 @@ fit2 <- contrasts.fit(fit, contrast.matrix)
 fit2 <- eBayes(fit2)
 
 #Okay now combine all into one result data frame
-tmpLimmaOut <- topTable(fit2, number=60000)[,c("ID", "logFC", "P.Value", "adj.P.Val")];
+tmpLimmaOut <- topTable(fit2, number=60000)[,c("logFC", "P.Value", "adj.P.Val")];
 tmpLimmaOut <- tmpLimmaOut[abs(tmpLimmaOut[,"logFC"])>1,];
 tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<.01,];
 
@@ -59,7 +59,7 @@ tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<.01,];
 }
 
 
-SigLimmaTrain(expData, "121_at", .20)
+result <- SigLimmaTrain(expData, "121_at", .20)
 
 
 
