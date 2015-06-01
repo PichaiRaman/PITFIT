@@ -61,9 +61,9 @@ tmpLimmaOut <- result[abs(result[,"logFC"])>logFCThresh,];
 tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
 
 output <- list();
-output["all"] <- result;
-output["hits"] <- tmpLimmaOut;
-
+output$all <- result;
+output$hits <- tmpLimmaOut;
+return(output);
 }
 
 #accessory for volcano plot
@@ -81,13 +81,15 @@ plotVolcanoTrain <- function(result, hitp=.05, hitlfc=1)
 {
 
 result[,"HIT"] <- result[,"adj.P.Val"]<hitp&abs(result[,"logFC"])>hitlfc;
-p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=HIT))+geom_point()+ scale_y_continuous(trans=reverselog_trans(10));
+p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=HIT))+geom_point()+ scale_y_continuous(trans=reverselog_trans(10))+theme_bw();
 return(p);
 }
 
 
 result <- SigLimmaTrain(expData, "121_at", .20)
-
+png("cha.png")
+plotVolcanoTrain(result[[1]])
+dev.off();
 
 
 
