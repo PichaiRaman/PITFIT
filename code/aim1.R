@@ -56,10 +56,13 @@ fit2 <- contrasts.fit(fit, contrast.matrix)
 fit2 <- eBayes(fit2)
 
 #Okay now combine all into one result data frame
-tmpLimmaOut <- topTable(fit2, number=60000)[,c("logFC", "P.Value", "adj.P.Val")];
-tmpLimmaOut <- tmpLimmaOut[abs(tmpLimmaOut[,"logFC"])>logFCThresh,];
+result <- topTable(fit2, number=60000)[,c("logFC", "P.Value", "adj.P.Val")];
+tmpLimmaOut <- result[abs(result[,"logFC"])>logFCThresh,];
 tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
 
+output <- list();
+output[1] <- result;
+output[2] <- tmpLimmaOut;
 
 }
 
