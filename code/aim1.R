@@ -61,8 +61,8 @@ tmpLimmaOut <- result[abs(result[,"logFC"])>logFCThresh,];
 tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
 
 output <- list();
-output[1] <- result;
-output[2] <- tmpLimmaOut;
+output["all"] <- result;
+output["hits"] <- tmpLimmaOut;
 
 }
 
