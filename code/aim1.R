@@ -41,7 +41,7 @@ design <- model.matrix(~0+fTarget);
 colnames(design) <- gsub("fTarget", "", colnames(design));
 
 #Run Limma
-trainDatatmp <- trainData[,rownames(targets)];
+trainDatatmp <- myData[,rownames(targets)];
 fit <- lmFit(trainDatatmp, design);
 myConts <- c("HIGH-LOW");
 
@@ -59,7 +59,7 @@ tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<.01,];
 }
 
 
-
+SigLimmaTrain(expData, "121_at", .20)
 
 
 
