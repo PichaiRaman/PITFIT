@@ -12,7 +12,7 @@ annotData <- read.delim("../data/ovarianDataAnnot.txt");
 
 
 
-SigLimmaTrain <- function(myData, myGene, thresh=.20)
+SigLimmaTrain <- function(myData, myGene, thresh=.20, pvalThresh=.25, logFCThresh=1)
 {
 #pull our vector of values for gene
 myVect <- myData[myGene,];
@@ -52,8 +52,8 @@ fit2 <- eBayes(fit2)
 
 #Okay now combine all into one result data frame
 tmpLimmaOut <- topTable(fit2, number=60000)[,c("logFC", "P.Value", "adj.P.Val")];
-tmpLimmaOut <- tmpLimmaOut[abs(tmpLimmaOut[,"logFC"])>1,];
-tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<.01,];
+tmpLimmaOut <- tmpLimmaOut[abs(tmpLimmaOut[,"logFC"])>logFCThresh,];
+tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
 
 
 }
