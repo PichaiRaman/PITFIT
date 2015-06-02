@@ -15,8 +15,8 @@ library("gplots");
 
 
 #Read in data
-expData <- read.delim("../data/ovarianData.txt");
-annotData <- read.delim("../data/ovarianDataAnnot.txt");
+expData <- read.delim("/srv/shiny-server/PITFIT/data/ovarianData.txt");
+annotData <- read.delim("/srv/shiny-server/PITFIT/data/ovarianDataAnnot.txt");
 
 
 
@@ -99,19 +99,4 @@ myRows <- rownames(hits);
 myHM <- myData[myRows,];
 hmPlot <- heatmap.2(myHM);
 }
-
-
-result <- SigLimmaTrain(expData, "121_at", .05)
-png("cha.png", width=1440, height=1440,  res=216);
-plotVolcanoTrain(result[[1]])
-dev.off();
-
-png("cha2.png", width=1440, height=1440,  res=216);
-plotHeatmap(result[[2]], as.matrix(expData))
-dev.off();
-
-
-
-
-
 

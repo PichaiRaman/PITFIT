@@ -1,4 +1,4 @@
-source("../code/aim1.R");
+source("../../code/aim1.R");
 library(shiny)
 
 
