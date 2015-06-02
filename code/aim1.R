@@ -72,6 +72,7 @@ tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
 output <- list();
 output$all <- result;
 output$hits <- tmpLimmaOut;
+output$data <- myData;
 return(output);
 }
 
