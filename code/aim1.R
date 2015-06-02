@@ -22,6 +22,12 @@ annotData <- read.delim("../data/ovarianDataAnnot.txt");
 
 SigLimmaTrain <- function(myData, myGene, thresh=.20, pvalThresh=.25, logFCThresh=1)
 {
+
+if(myData=="ov")
+{
+myData = expData;
+}
+
 #pull our vector of values for gene
 myVect <- myData[myGene,];
 myEcdf <- ecdf(myVect);
