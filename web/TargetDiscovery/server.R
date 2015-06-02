@@ -26,7 +26,7 @@ shinyServer(function(input, output) {
   # Generate a summary of the data
   output$summary <- renderPlot({
   	
-    input$goPlot # Re-run when button is clicked
+    input$submit # Re-run when button is clicked
 
     # Create 0-row data frame which will be used to store data
     dat <- data.frame(x = numeric(0), y = numeric(0))
