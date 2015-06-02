@@ -4,7 +4,7 @@ library(shiny)
 shinyUI(fluidPage(
     
   # Application title
-  titlePanel("Tabsets"),
+  titlePanel("Target Discovery"),
   
   # Sidebar with controls to select the random distribution type
   # and number of observations to generate. Note the use of the
@@ -28,9 +28,9 @@ shinyUI(fluidPage(
     # of the generated distribution
     mainPanel(
       tabsetPanel(type = "tabs", 
-        tabPanel("Volcano Plot", plotOutput("plot")), 
-        tabPanel("Heatmap", plotOutput("summary")), 
-        tabPanel("Table", tableOutput("table"))
+        tabPanel("Table", tableOutput("table")), 
+       tabPanel("Volcano Plot", plotOutput("plot")), 
+        tabPanel("Heatmap", plotOutput("summary")) 
       )
     )
   )
