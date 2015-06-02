@@ -26,7 +26,7 @@ shinyServer(function(input, output) {
   # Generate a summary of the data
   output$summary <- renderPlot({
     	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=.25, logFCThresh=1);
-	plotVolcanoTrain(myRes[[1]]);
+	plotHeatmap(myRes[[2]], myRes[[3]]);
   })
   
   
