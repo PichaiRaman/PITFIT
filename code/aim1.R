@@ -98,6 +98,6 @@ plotHeatmap <- function(hits, myData)
 {
 myRows <- rownames(hits);
 myHM <- myData[myRows,];
-hmPlot <- heatmap(as.matrix(myHM));
+hmPlot <- as.matrix(myHM);
 }
 
