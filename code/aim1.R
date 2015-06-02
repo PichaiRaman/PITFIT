@@ -11,6 +11,8 @@ library("limma");
 library("scales");
 library("ggplot2");
 library("pheatmap");
+library("gplots");
+
 
 #Read in data
 expData <- read.delim("../data/ovarianData.txt");
@@ -80,7 +82,6 @@ reverselog_trans <- function(base = exp(1)) {
 #volcano plot, takes in limma analysis
 plotVolcanoTrain <- function(result, hitp=.05, hitlfc=1)
 {
-
 result[,"HIT"] <- result[,"adj.P.Val"]<hitp&abs(result[,"logFC"])>hitlfc;
 p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=HIT))+geom_point()+ scale_y_continuous(trans=reverselog_trans(10))+theme_bw();
 return(p);
@@ -90,15 +91,18 @@ plotHeatmap <- function(hits, myData)
 {
 myRows <- rownames(hits);
 myHM <- myData[myRows,];
-hmPlot <- pheatmap(myHM);
+hmPlot <- heatmap.2(myHM);
 }
 
 
-result <- SigLimmaTrain(expData, "121_at", .20)
-png("cha.png")
+result <- SigLimmaTrain(expData, "121_at", .05)
+png("cha.png", width=1440, height=1440,  res=216);
 plotVolcanoTrain(result[[1]])
 dev.off();
 
+png("cha2.png", width=1440, height=1440,  res=216);
+plotHeatmap(result[[2]], as.matrix(expData))
+dev.off();
 
 
 
