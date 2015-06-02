@@ -11,18 +11,17 @@ shinyUI(fluidPage(
   # br() element to introduce extra vertical spacing
   sidebarLayout(
     sidebarPanel(
-      radioButtons("dist", "Distribution type:",
-                   c("Normal" = "norm",
-                     "Uniform" = "unif",
-                     "Log-normal" = "lnorm",
-                     "Exponential" = "exp")),
+      radioButtons("dataset", "Data Set:",
+                   c("Ovarian TCGA" = "ov",
+                     "Pancreatic TCGA" = "panc",
+                     "Prostate TCGA" = "pros",
+                     "Liver TCGA" = "liv")),
       br(),
       
-      sliderInput("n", 
-                  "Number of observations:", 
-                   value = 500,
-                   min = 1, 
-                   max = 1000)
+      textInput("gene", 
+                  "Enter Gene", 
+                 "121_at")),
+	submitButton("Run")
     ),
     
     # Show a tabset that includes a plot, summary, and table view
