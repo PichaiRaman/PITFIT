@@ -25,6 +25,34 @@ shinyServer(function(input, output) {
   
   # Generate a summary of the data
   output$summary <- renderPlot({
+  	
+    input$goPlot # Re-run when button is clicked
+
+    # Create 0-row data frame which will be used to store data
+    dat <- data.frame(x = numeric(0), y = numeric(0))
+
+    # Create a Progress object
+    progress <- shiny::Progress$new()
+    # Make sure it closes when we exit this reactive, even if there's an error
+    on.exit(progress$close())
+
+    progress$set(message = "Making plot", value = 0)
+
+    # Number of times we'll go through the loop
+    n <- 10
+
+    for (i in 1:n) {
+      # Each time through the loop, add another row of data. This is
+      # a stand-in for a long-running computation.
+      dat <- rbind(dat, data.frame(x = rnorm(1), y = rnorm(1)))
+
+      # Increment the progress bar, and update the detail text.
+      progress$inc(1/n, detail = paste("Doing part", i))
+
+      # Pause for 0.1 seconds to simulate a long computation.
+      Sys.sleep(0.1)
+    }
+
     	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=.25, logFCThresh=1);
 	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]));
   })
