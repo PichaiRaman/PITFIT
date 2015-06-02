@@ -20,7 +20,7 @@ shinyUI(fluidPage(
       
       textInput("gene", 
                   "Enter Gene", 
-                 "121_at")),
+                 "121_at"),
 	submitButton("Run")
     ),
     
@@ -28,8 +28,8 @@ shinyUI(fluidPage(
     # of the generated distribution
     mainPanel(
       tabsetPanel(type = "tabs", 
-        tabPanel("Plot", plotOutput("plot")), 
-        tabPanel("Summary", verbatimTextOutput("summary")), 
+        tabPanel("Volcano Plot", plotOutput("plot")), 
+        tabPanel("Heatmap", plotOutput("summary")), 
         tabPanel("Table", tableOutput("table"))
       )
     )
