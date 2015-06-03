@@ -68,6 +68,8 @@ fit2 <- eBayes(fit2)
 result <- topTable(fit2, number=60000)[,c("logFC", "P.Value", "adj.P.Val")];
 tmpLimmaOut <- result[abs(result[,"logFC"])>logFCThresh,];
 tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
+tmpLimmaOut <- data.frame(rownames(tmpLimmaOut), tmpLimmaOut);
+colnames(tmpLimmaOut)[1] <- "Gene";
 
 output <- list();
 output$all <- result;
