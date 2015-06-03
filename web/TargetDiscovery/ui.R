@@ -27,6 +27,8 @@ shinyUI(fluidPage(
       textInput("pval", 
                   "Adjusted P-Value Cutoff", 
                  ".25"),
+      br(),
+
       textInput("logFC", 
                   "Log FC Cutoff", 
                  "1"),
