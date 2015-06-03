@@ -21,7 +21,14 @@ shinyUI(fluidPage(
       textInput("gene", 
                   "Enter Gene", 
                  "121_at"),
+
+      br(),
+      
+      textInput("pval", 
+                  "Adjusted P-Value Cutoff", 
+                 ".25"),
 	submitButton("Run")
+	
     ),
     
     # Show a tabset that includes a plot, summary, and table view
