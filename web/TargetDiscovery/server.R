@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
       Sys.sleep(0.1)
     }
 
-    	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=1);
+  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
     	myRes[[2]];
   })
 
@@ -75,8 +75,8 @@ shinyServer(function(input, output) {
       Sys.sleep(0.1)
     }
 
-  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=1);
-	plotVolcanoTrain(myRes[[1]]);
+  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
+	plotVolcanoTrain(myRes[[1]], hitp=as.numeric(input$pval), as.numeric((input$logFC)));
   })
   
   # Generate a summary of the data
@@ -109,7 +109,7 @@ shinyServer(function(input, output) {
       Sys.sleep(0.1)
     }
 
-    	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=1);
+  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
 	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]));
   })
   
