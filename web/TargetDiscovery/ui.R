@@ -40,7 +40,7 @@ shinyUI(fluidPage(
     # of the generated distribution
     mainPanel(
       tabsetPanel(type = "tabs", 
-        tabPanel("Table", tableOutput("table")), 
+        tabPanel("Table", dataTableOutput(outputId="table")), 
        tabPanel("Volcano Plot", plotOutput("plot")), 
         tabPanel("Heatmap", plotOutput("summary")) 
       )
