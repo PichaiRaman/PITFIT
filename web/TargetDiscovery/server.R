@@ -13,7 +13,7 @@ shinyServer(function(input, output) {
   # all expressions are called in the sequence implied by the
   # dependency graph
 
-  output$table <- renderTable({
+  output$table <- renderDataTable({
   
       input$submit # Re-run when button is clicked
 
