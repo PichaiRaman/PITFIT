@@ -42,7 +42,7 @@ shinyServer(function(input, output) {
       Sys.sleep(0.1)
     }
 
-    	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=.25, logFCThresh=1);
+    	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=1);
     	myRes[[2]];
   })
 
@@ -75,7 +75,7 @@ shinyServer(function(input, output) {
       Sys.sleep(0.1)
     }
 
-  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=.25, logFCThresh=1);
+  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=1);
 	plotVolcanoTrain(myRes[[1]]);
   })
   
@@ -109,7 +109,7 @@ shinyServer(function(input, output) {
       Sys.sleep(0.1)
     }
 
-    	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=.25, logFCThresh=1);
+    	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=1);
 	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]));
   })
   
