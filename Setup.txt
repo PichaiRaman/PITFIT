@@ -31,4 +31,13 @@ Make sure to configure it, i.e. user.name, user.email, and add ssh key. Also get
 wget https://github.com/twbs/bootstrap/releases/download/v3.3.4/bootstrap-3.3.4-dist.zip
 ```
 
+Also needed to download broad firehose to get TCGA data
+
+```
+https://confluence.broadinstitute.org/display/GDAC/Download
+```
+
+
+
+
 
