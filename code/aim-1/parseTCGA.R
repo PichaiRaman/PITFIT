@@ -7,7 +7,7 @@
 
 #Find name of top directory
 BaseDir <- "/srv/shiny-server/PITFIT/data/"
-topDir <- list.files(BaseDir)
+topDir <- list.files(BaseDir)[grep("stddata", list.files(BaseDir))]
 
 #Vector of cancers & lists to store all data
 cancVec <- c("OV", "PAAD", "PRAD", "READ")
