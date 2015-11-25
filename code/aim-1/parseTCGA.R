@@ -42,20 +42,24 @@ myEnd <- which(strsplit(as.character(x), "")[[1]]=="|")-1;
 x <- substring(x, 1, myEnd);
 }
 
+factToNum <- function(x)
+{
+return(as.numeric(as.character(x)));
+}
 
 for(i in 1:length(cancVec))
 {
 #Get Clinical data 
-setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
-midDir <- list.files()
-setwd(paste(getwd(), "/", midDir, "/", sep=""));
-clinDirN <- list.files()[grep("Clinical", list.files())];
-setwd(paste(getwd(), "/", clinDirN, "/", sep=""));
-clinDataTmp <- read.delim(paste(getwd(), "/", list.files()[grep('merged_only_clinical_clin_format.txt', list.files())], sep=""));
-rownames(clinDataTmp) <- clinDataTmp[,1];
-clinDataTmp <- clinDataTmp[-1];
-clinDataTmp <- data.frame(t(clinDataTmp));
-clinDataList[[cancVec[i]]] <- clinDataTmp;
+#setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
+#midDir <- list.files()
+#setwd(paste(getwd(), "/", midDir, "/", sep=""));
+#clinDirN <- list.files()[grep("Clinical", list.files())];
+#setwd(paste(getwd(), "/", clinDirN, "/", sep=""));
+#clinDataTmp <- read.delim(paste(getwd(), "/", list.files()[grep('merged_only_clinical_clin_format.txt', list.files())], sep=""));
+#rownames(clinDataTmp) <- clinDataTmp[,1];
+#clinDataTmp <- clinDataTmp[-1];
+#clinDataTmp <- data.frame(t(clinDataTmp));
+#clinDataList[[cancVec[i]]] <- clinDataTmp;
 
 #Get Expression data 
 setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
@@ -74,6 +78,8 @@ myGeneNames <- myGeneNames[keepRows];
 expDataTmp <- expDataTmp[keepRows,];
 rownames(expDataTmp) <- myGeneNames;
 expDataTmp <- expDataTmp[-1];
+expDataTmp <- sapply(expDataTmp, FUN=factToNum);
+rownames(expDataTmp) <- myGeneNames;
 expDataList[[cancVec[i]]] <- expDataTmp;
 
 #Get Mutation data later
@@ -86,14 +92,14 @@ expDataList[[cancVec[i]]] <- expDataTmp;
 #mutDataList[[cancVec[i]]] <- mutDataTmp;
 
 #Get Copy Number data 
-setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
-midDir <- list.files()
-setwd(paste(getwd(), "/", midDir, "/", sep=""));
-cnaDirN <- list.files()[grep("Merge_snp", list.files())];
-setwd(paste(getwd(), "/", cnaDirN, "/", sep=""));
-cnaDataTmp <- read.delim(paste(getwd(), "/", list.files()[grep('snp', list.files())], sep=""));
-cnaDataTmp <- data.frame(cnaDataTmp);
-cnaDataList[[cancVec[i]]] <- cnaDataTmp;
+#setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
+#midDir <- list.files()
+#setwd(paste(getwd(), "/", midDir, "/", sep=""));
+#cnaDirN <- list.files()[grep("Merge_snp", list.files())];
+#setwd(paste(getwd(), "/", cnaDirN, "/", sep=""));
+#cnaDataTmp <- read.delim(paste(getwd(), "/", list.files()[grep('snp', list.files())], sep=""));
+#cnaDataTmp <- data.frame(cnaDataTmp);
+#cnaDataList[[cancVec[i]]] <- cnaDataTmp;
 }
 
 keep(clinDataList, expDataList, mutDataList,cnaDataList, sure=T);
