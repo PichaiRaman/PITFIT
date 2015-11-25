@@ -13,20 +13,15 @@ library("ggplot2");
 library("pheatmap");
 library("gplots");
 
-
 #Read in data
-expData <- read.delim("/srv/shiny-server/PITFIT/data/ovarianData.txt");
-annotData <- read.delim("/srv/shiny-server/PITFIT/data/ovarianDataAnnot.txt");
+load("../../data/ParsedTCGA.RData");
 
 
 
 SigLimmaTrain <- function(myData, myGene, thresh=.20, pvalThresh=.25, logFCThresh=1)
 {
 
-if(myData=="ov")
-{
-myData = expData;
-}
+myData <- expDataList[[myData]];
 
 #pull our vector of values for gene
 myVect <- myData[myGene,];
@@ -56,7 +51,7 @@ colnames(design) <- gsub("fTarget", "", colnames(design));
 
 #Run Limma
 trainDatatmp <- myData[,rownames(targets)];
-fit <- lmFit(trainDatatmp, design);
+fit <- lmFit(as.matrix(trainDatatmp), design);
 myConts <- c("HIGH-LOW");
 
 
