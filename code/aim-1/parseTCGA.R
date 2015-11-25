@@ -5,6 +5,9 @@
 #Date : 11/8/2015
 #############################
 
+#Call libraries
+library("gdata");
+
 #Find name of top directory
 BaseDir <- "/srv/shiny-server/PITFIT/data/"
 topDir <- list.files(BaseDir)[grep("stddata", list.files(BaseDir))]
@@ -33,6 +36,11 @@ for(i in 2:length(myFiles))
 return(allDat);
 }
 
+pullGeneNames <- function(x)
+{
+myEnd <- which(strsplit(as.character(x), "")[[1]]=="|")-1;
+x <- substring(x, 1, myEnd);
+}
 
 
 for(i in 1:length(cancVec))
@@ -57,16 +65,25 @@ expDirN <- list.files()[grep("rnaseqv2", list.files())];
 setwd(paste(getwd(), "/", expDirN, "/", sep=""));
 expDataTmp <- read.delim(paste(getwd(), "/", list.files()[grep('rnaseqv2__illuminahiseq', list.files())], sep=""));
 expDataTmp <- expDataTmp[-1,];
+#Remove any rows without gene names
+expDataTmp <- expDataTmp[!grepl("\\?", as.character(expDataTmp[,1])),]
+myGeneNames <- sapply(expDataTmp[,1], FUN=pullGeneNames);
+removeRow <- which(myGeneNames %in% myGeneNames[duplicated(myGeneNames)])[1];
+keepRows <- setdiff(c(1:length(myGeneNames)), removeRow);
+myGeneNames <- myGeneNames[keepRows];
+expDataTmp <- expDataTmp[keepRows,];
+rownames(expDataTmp) <- myGeneNames;
+expDataTmp <- expDataTmp[-1];
 expDataList[[cancVec[i]]] <- expDataTmp;
 
-#Get Mutation data 
-setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
-midDir <- list.files()
-setwd(paste(getwd(), "/", midDir, "/", sep=""));
-mutDirN <- list.files()[grep("Mutation", list.files())];
-setwd(paste(getwd(), "/", mutDirN, "/", sep=""));
-mutDataTmp <- collapseMut();
-mutDataList[[cancVec[i]]] <- mutDataTmp;
+#Get Mutation data later
+#setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
+#midDir <- list.files()
+#setwd(paste(getwd(), "/", midDir, "/", sep=""));
+#mutDirN <- list.files()[grep("Mutation", list.files())];
+#setwd(paste(getwd(), "/", mutDirN, "/", sep=""));
+#mutDataTmp <- collapseMut();
+#mutDataList[[cancVec[i]]] <- mutDataTmp;
 
 #Get Copy Number data 
 setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
