@@ -110,7 +110,7 @@ shinyServer(function(input, output) {
     }
 
   	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
-	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]));
+	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]), scale="row");
   })
   
   
