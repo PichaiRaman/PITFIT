@@ -87,7 +87,7 @@ colnames(tmpLimmaOut)[1] <- "Gene";
 output <- list();
 output$all <- result;
 output$hits <- tmpLimmaOut;
-output$data <- myData;
+output$data <- voomData;
 return(output);
 }
 
