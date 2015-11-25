@@ -12,6 +12,7 @@ library("scales");
 library("ggplot2");
 library("pheatmap");
 library("gplots");
+library("edgeR");
 
 #Read in data
 load("../../data/ParsedTCGA.RData");
@@ -58,15 +59,20 @@ rownames(targets) <- targets[,1];
 targets <- targets[-1];
 
 fTarget <- factor(targets[,"CLASS"]);
+design <- model.matrix(~fTarget);
+
+
+#Run Voom/Limma
+trainDatatmp <- myData[,rownames(targets)];
+y <- DGEList(counts=trainDatatmp, genes=rownames(trainDatatmp))
+y <- calcNormFactors(y)
+v <- voom(y,design,plot=F);
+voomData <- v$E
+
 design <- model.matrix(~0+fTarget);
 colnames(design) <- gsub("fTarget", "", colnames(design));
-
-#Run Limma
-trainDatatmp <- myData[,rownames(targets)];
-fit <- lmFit(as.matrix(trainDatatmp), design);
+fit <- lmFit(voomData, design);
 myConts <- c("HIGH-LOW");
-
-
 contrast.matrix <- makeContrasts(contrasts=myConts, levels=design)
 fit2 <- contrasts.fit(fit, contrast.matrix)
 fit2 <- eBayes(fit2)
