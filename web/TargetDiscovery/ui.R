@@ -13,7 +13,7 @@ shinyUI(fluidPage(
     sidebarPanel(
       radioButtons("dataset", "Data Set:",
                    c("Ovarian TCGA" = "OV",
-                     "Pancreatic TCGA" = "PANC",
+                     "Pancreatic TCGA" = "PAAD",
                      "Prostate TCGA" = "PRAD",
                      "Rectal TCGA" = "READ")),
       br(),
