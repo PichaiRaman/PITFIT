@@ -1,4 +1,4 @@
-source("../../code/aim1.R");
+source("../../code/aim-1/aim-1-worker.R");
 library(shiny)
 library(pheatmap)
 
