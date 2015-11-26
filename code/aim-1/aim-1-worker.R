@@ -17,7 +17,8 @@ library("edgeR");
 #Read in data
 load("../../data/ParsedTCGA.RData");
 
-
+#Features for selectize
+expGeneFeatures <- rownames(expDataList[[1]]);
 
 ##############################
 #Function to come up with differentially
