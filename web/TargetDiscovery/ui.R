@@ -18,9 +18,7 @@ shinyUI(fluidPage(
                      "Rectal TCGA" = "READ")),
       br(),
       
-      textInput("gene", 
-                  "Enter Gene", 
-                 "FOXM1"),
+      selectizeInput('gene', 'Enter Gene', choices = 'FOXM1', multiple=FALSE),
 
       br(),
       
@@ -32,9 +30,12 @@ shinyUI(fluidPage(
       textInput("logFC", 
                   "Log FC Cutoff", 
                  "1"),
-	submitButton("Run")
+	submitButton("Run"),
+br(),
+downloadButton('downloadData', 'Download')
 	
     ),
+
     
     # Show a tabset that includes a plot, summary, and table view
     # of the generated distribution

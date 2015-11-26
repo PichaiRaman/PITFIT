@@ -2,10 +2,13 @@ source("../../code/aim-1/aim-1-worker.R");
 library(shiny)
 library(pheatmap)
 
+globalResult <- "";
+globalVolcano <- "";
 # Define server logic for random distribution application
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
  
+  updateSelectizeInput(session, 'gene', choices = expGeneFeatures, server = TRUE)
  
   # Generate a plot of the data. Also uses the inputs to build
   # the plot label. Note that the dependencies on both the inputs
@@ -43,7 +46,8 @@ shinyServer(function(input, output) {
     }
 
   	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
-    	myRes[[2]];
+globalResult <<- myRes[[2]];    	
+myRes[[2]];
   })
 
   output$plot <- renderPlot({ 
@@ -76,9 +80,16 @@ shinyServer(function(input, output) {
     }
 
   	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
-	plotVolcanoTrain(myRes[[1]], hitp=as.numeric(input$pval), as.numeric((input$logFC)));
+	 plotVolcanoTrain(myRes[[1]], hitp=as.numeric(input$pval), as.numeric((input$logFC)));
   })
-  
+ 
+  output$downloadData <- downloadHandler(
+    filename = function() { paste('result', '.csv', sep='') },
+    content = function(file) {
+      write.csv(globalResult, file, row.names=F)
+    })
+
+
   # Generate a summary of the data
   output$summary <- renderPlot({
   	
