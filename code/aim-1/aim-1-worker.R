@@ -287,6 +287,7 @@ reverselog_trans <- function(base = exp(1)) {
 #volcano plot, takes in limma analysis
 plotVolcanoTrain <- function(result, hitp=.05, hitlfc=1)
 {
+result[,"Gene"] <- rownames(result);
 result[,"HIT"] <- result[,"adj.P.Val"]<hitp&abs(result[,"logFC"])>hitlfc;
 p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=Gene, size=HIT))+geom_point()+ scale_y_continuous(trans=reverselog_trans(10))+theme_bw();
 return(p);
