@@ -1,6 +1,6 @@
 source("../../code/aim-1/aim-1-worker.R");
 library(shiny)
-library(pheatmap)
+library(d3heatmap)
 library(plotly);
 library(d3heatmap)
 
@@ -123,7 +123,11 @@ myRes[[2]];
     }
 
   	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=as.numeric(input$thresh), cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
+<<<<<<< HEAD
 	d3heatmap(myRes[[2]], myRes[[3]], scale="row");
+=======
+	d3heatmap(plotHeatmap(myRes[[2]], myRes[[3]]));
+>>>>>>> 9d7a8946044a3d507e44f6f27f19593bc4a17b0a
   })
   
   
