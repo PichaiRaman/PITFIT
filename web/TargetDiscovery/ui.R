@@ -53,7 +53,7 @@ downloadButton('downloadData', 'Download')
       tabsetPanel(type = "tabs", 
         tabPanel("Table", dataTableOutput(outputId="table")), 
        tabPanel("Volcano Plot", plotlyOutput("plot")), 
-        tabPanel("Heatmap", plotOutput("summary")) 
+        tabPanel("Heatmap", d3heatmapOutput("summary")) 
       )
     )
   )
