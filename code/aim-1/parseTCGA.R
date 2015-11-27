@@ -12,6 +12,9 @@ library("tidyr");
 #Find name of top directory
 BaseDir <- "/srv/shiny-server/PITFIT/data/TCGA_Data/"
 
+#Vector to hold all Features
+featureVector <- c();
+
 #Vector of cancers & lists to store all data
 cancVec <- c("ov", "paad", "prad")
 clinDataList <- list();
@@ -29,12 +32,15 @@ expDataTmp <- read.delim("data_RNA_Seq_v2_expression_median.txt", stringsAsFacto
 rownames(expDataTmp) <- expDataTmp[,1];
 expDataTmp <- expDataTmp[-1:-2];
 expDataList[[cancVec[i]]] <- expDataTmp;
+featureVector <- c(featureVector, paste(rownames(expDataTmp), "Exp", sep="_"));
 
 #Get Copy Number data 
 cnaDataTmp <- read.delim("data_log2CNA.txt", stringsAsFactors=F);
 rownames(cnaDataTmp) <- cnaDataTmp[,1];
 cnaDataTmp <- cnaDataTmp[-1:-2];
 cnaDataList[[cancVec[i]]] <- cnaDataTmp;
+featureVector <- c(featureVector, paste(rownames(cnaDataTmp), "Cna", sep="_"));
+
 
 #Get Mutation data 
 mutDataTmp <- read.delim("data_mutations_extended.txt", header=T, skip=1);
@@ -52,19 +58,19 @@ mutDataTmp <- as.data.frame(mutDataTmp);
 rownames(mutDataTmp) <- mutDataTmp[,1];
 mutDataTmp <- mutDataTmp[-1];
 mutDataList[[cancVec[i]]] <- mutDataTmp;
-
+featureVector <- c(featureVector, paste(rownames(mutDataTmp), "Mut", sep="_"));
 
 #Get Clinical data 
 clinDataTmp <- read.delim("data_bcr_clinical_data.txt");
-
-
-
-
+clinCols <- c("PATIENT_ID", "GENDER", "CLINICAL_STAGE", "DAYS_TO_BIRTH", "OS_STATUS", "OS_MONTHS", "DFS_STATUS", "DFS_MONTHS")
+clinDataTmp <- clinDataTmp[,clinCols];  
 clinDataList[[cancVec[i]]] <- clinDataTmp;
+featureVector <- c(featureVector, paste(clinCols, "Clin", sep="_"));
 
 }
+featureVector <- unique(featureVector);
 
-keep(clinDataList, expDataList, mutDataList,cnaDataList, sure=T);
+keep(clinDataList, expDataList, mutDataList,cnaDataList, featureVector, sure=T);
 save.image("/bigdata/PITFIT_Data/ParsedTCGA.RData");
 
 
