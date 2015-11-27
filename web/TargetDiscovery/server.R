@@ -2,6 +2,7 @@ source("../../code/aim-1/aim-1-worker.R");
 library(shiny)
 library(pheatmap)
 library(plotly);
+library(d3heatmap)
 
 globalResult <- "";
 globalVolcano <- "";
@@ -92,7 +93,7 @@ myRes[[2]];
 
 
   # Generate a summary of the data
-  output$summary <- renderPlot({
+  output$summary <- renderD3heatmap({
   	
     input$submit # Re-run when button is clicked
 
@@ -117,12 +118,12 @@ myRes[[2]];
       # Increment the progress bar, and update the detail text.
       progress$inc(1/n, detail = paste("Doing part", i))
 
-      # Pause for 0.1 seconds to simulate a long computation.
+      #v Pause for 0.1 seconds to simulate a long computation.
       Sys.sleep(0.1)
     }
 
   	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=as.numeric(input$thresh), cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
-	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]), scale="row");
+	d3heatmap(myRes[[2]], myRes[[3]], scale="row");
   })
   
   
