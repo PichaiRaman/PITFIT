@@ -26,6 +26,7 @@ expPatientList <- colnames(expDataList[[1]]);
 ##############################
 pitfitAnalyzeAim1 <- function(myData, myFeature, thresh=.20, cnaDir = "Amp", pvalThresh=.25, logFCThresh=1)
 {
+  output <- "";
   #If the feature is Expression
   if(grepl("_Exp", myFeature))
   {
@@ -51,7 +52,7 @@ pitfitAnalyzeAim1 <- function(myData, myFeature, thresh=.20, cnaDir = "Amp", pva
 
 
 
-
+return(output);
 }
 
 
