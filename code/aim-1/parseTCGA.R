@@ -66,7 +66,7 @@ clinCols <- c("PATIENT_ID", "GENDER", "CLINICAL_STAGE", "DAYS_TO_BIRTH", "OS_STA
 clinDataTmp <- clinDataTmp[,clinCols];  
 clinDataList[[cancVec[i]]] <- clinDataTmp;
 featureVector <- c(featureVector, paste(clinCols, "Clin", sep="_"));
-
+print(paste("Done ", cancVec[i], sep=""));
 }
 featureVector <- unique(featureVector);
 
