@@ -1,0 +1,71 @@
+#!/bin/bash
+
+cd ../../data/TCGA_Data/ 
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/acc.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/blca.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/brca.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/cesc.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/chol.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/coadread.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/dlbc.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/esca.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/gbm.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/hnsc.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/kich.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/kirc.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/kirp.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/laml.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/lgg.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/lihc.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/luad.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/lusc.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/meso.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/ov.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/paad.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/pcpg.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/prad.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/sarc.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/skcm.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/stad.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/tgct.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/thca.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/thym.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/ucec.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/ucs.zip
+wget http://cbio.mskcc.org/cancergenomics/public-portal/downloads/dfci/uvm.zip
+
+unzip acc.zip
+unzip blca.zip
+unzip brca.zip
+unzip cesc.zip
+unzip chol.zip
+unzip coadread.zip
+unzip dlbc.zip
+unzip esca.zip
+unzip gbm.zip
+unzip hnsc.zip
+unzip kich.zip
+unzip kirc.zip
+unzip kirp.zip
+unzip laml.zip
+unzip lgg.zip
+unzip lihc.zip
+unzip luad.zip
+unzip lusc.zip
+unzip meso.zip
+unzip ov.zip
+unzip paad.zip
+unzip pcpg.zip
+unzip prad.zip
+unzip sarc.zip
+unzip skcm.zip
+unzip stad.zip
+unzip tgct.zip
+unzip thca.zip
+unzip thym.zip
+unzip ucec.zip
+unzip ucs.zip
+unzip uvm.zip
+
+
+
