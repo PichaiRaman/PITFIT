@@ -288,7 +288,7 @@ reverselog_trans <- function(base = exp(1)) {
 plotVolcanoTrain <- function(result, hitp=.05, hitlfc=1)
 {
 result[,"HIT"] <- result[,"adj.P.Val"]<hitp&abs(result[,"logFC"])>hitlfc;
-p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=HIT))+geom_point()+ scale_y_continuous(trans=reverselog_trans(10))+theme_bw()+scale_colour_manual(values=c("blue", "red"));
+p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=Gene, size=HIT))+geom_point()+ scale_y_continuous(trans=reverselog_trans(10))+theme_bw();
 return(p);
 }
 
