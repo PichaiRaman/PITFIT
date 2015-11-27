@@ -1,4 +1,5 @@
 library(shiny)
+library(plotly)
 
 # Define UI for random distribution application 
 shinyUI(fluidPage(theme = "bootstrap.css",
@@ -51,7 +52,7 @@ downloadButton('downloadData', 'Download')
     mainPanel(
       tabsetPanel(type = "tabs", 
         tabPanel("Table", dataTableOutput(outputId="table")), 
-       tabPanel("Volcano Plot", plotOutput("plot")), 
+       tabPanel("Volcano Plot", plotlyOutput("plot")), 
         tabPanel("Heatmap", plotOutput("summary")) 
       )
     )

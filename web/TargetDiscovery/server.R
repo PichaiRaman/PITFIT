@@ -1,6 +1,7 @@
 source("../../code/aim-1/aim-1-worker.R");
 library(shiny)
 library(pheatmap)
+library(plotly);
 
 globalResult <- "";
 globalVolcano <- "";
@@ -50,7 +51,7 @@ globalResult <<- myRes[[2]];
 myRes[[2]];
   })
 
-  output$plot <- renderPlot({ 
+  output$plot <- renderPlotly({ 
   
       input$submit # Re-run when button is clicked
 
@@ -80,7 +81,7 @@ myRes[[2]];
     }
 
   	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=as.numeric(input$thresh), cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
-	 plotVolcanoTrain(myRes[[1]], hitp=as.numeric(input$pval), as.numeric((input$logFC)));
+	 ggplotly(plotVolcanoTrain(myRes[[1]], hitp=as.numeric(input$pval), as.numeric((input$logFC))));
   })
  
   output$downloadData <- downloadHandler(
