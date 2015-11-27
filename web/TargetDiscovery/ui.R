@@ -12,13 +12,12 @@ shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       radioButtons("dataset", "Data Set:",
-                   c("Ovarian TCGA" = "OV",
-                     "Pancreatic TCGA" = "PAAD",
-                     "Prostate TCGA" = "PRAD",
-                     "Rectal TCGA" = "READ")),
+                   c("Ovarian TCGA" = "ov",
+                     "Pancreatic TCGA" = "paad",
+                     "Prostate TCGA" = "prad")),
       br(),
       
-      selectizeInput('gene', 'Enter Gene', choices = 'FOXM1', multiple=FALSE),
+      selectizeInput('gene', 'Enter Feature', choices = 'FOXM1_Exp', multiple=FALSE),
 
       br(),
       
