@@ -1,7 +1,7 @@
 library(shiny)
 
 # Define UI for random distribution application 
-shinyUI(fluidPage(
+shinyUI(fluidPage(theme = "bootstrap.css",
     
   # Application title
   titlePanel("Target Discovery"),
