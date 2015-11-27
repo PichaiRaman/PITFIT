@@ -40,12 +40,89 @@ pitfitAnalyzeAim1 <- function(myData, myFeature, expThresh=.20, cnaDir = "Amp", 
     output <- cnaAnalysis((myData, myFeature, cnaDir, pvalThresh, logFCThresh)
   }
 
+  #If the feature is Mutation
+  if(grepl("_Mut", myFeature))
+  {
+    myFeature <- strsplit(myFeature, "_")[[1]][1];
+    output <- mutAnalysis((myData, myFeature, pvalThresh, logFCThresh)
+  }
 
 
 
 
 
 
+}
+
+
+
+##############################
+#mutAnalysis
+#Function to come up with differentially
+#expressed gene based on mutation
+#and set of filters
+#
+# Example:
+# myData <-"ov";
+# myGene <- "FOXM1"
+# thresh <- .25
+# pvalThresh <- .25
+# logFCThresh <- 1
+##############################
+mutAnalysis <- function(myData, myGene, pvalThresh=.25, logFCThresh=1)
+{
+#Choose the data set
+myMutData <- mutDataList[[myData]];
+myData <- expDataList[[myData]];
+
+#pull our vector of values for gene
+myVect <- myMutData[myGene,];
+group1 <-  intersect(expPatientList, gsub("-", ".", names(myVect[which(myVect==c("HIGH", "MODERATE"))])));
+group2 <-  intersect(expPatientList, gsub("-", ".", names(myVect[which(myVect==c("LOW", "NONE"))])));
+
+#Create targets to run limma
+tmpLow <- data.frame(group2, rep("LOW", length(group2)))
+colnames(tmpLow) <- c("SAMP", "CLASS");
+
+tmpHigh <- data.frame(group1, rep("HIGH", length(group1)))
+colnames(tmpHigh) <- c("SAMP", "CLASS");
+
+targets <- rbind(tmpLow, tmpHigh);
+targets[,2] <- as.factor(targets[,2]);
+rownames(targets) <- targets[,1];
+targets <- targets[-1];
+
+fTarget <- factor(targets[,"CLASS"]);
+design <- model.matrix(~fTarget);
+
+
+#Run Voom/Limma
+trainDatatmp <- myData[,rownames(targets)];
+y <- DGEList(counts=trainDatatmp, genes=rownames(trainDatatmp))
+y <- calcNormFactors(y)
+v <- voom(y,design,plot=F);
+voomData <- v$E
+
+design <- model.matrix(~0+fTarget);
+colnames(design) <- gsub("fTarget", "", colnames(design));
+fit <- lmFit(voomData, design);
+myConts <- c("HIGH-LOW");
+contrast.matrix <- makeContrasts(contrasts=myConts, levels=design)
+fit2 <- contrasts.fit(fit, contrast.matrix)
+fit2 <- eBayes(fit2)
+
+#Okay now combine all into one result data frame
+result <- topTable(fit2, number=60000)[,c("logFC", "P.Value", "adj.P.Val")];
+tmpLimmaOut <- result[abs(result[,"logFC"])>logFCThresh,];
+tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
+tmpLimmaOut <- data.frame(rownames(tmpLimmaOut), tmpLimmaOut);
+colnames(tmpLimmaOut)[1] <- "Gene";
+
+output <- list();
+output$all <- result;
+output$hits <- tmpLimmaOut;
+output$data <- voomData;
+return(output);
 }
 
 
