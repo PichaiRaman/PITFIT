@@ -8,7 +8,7 @@ globalVolcano <- "";
 shinyServer(function(input, output, session) {
   
  
-  updateSelectizeInput(session, 'gene', choices = expGeneFeatures, server = TRUE)
+  updateSelectizeInput(session, 'gene', choices = featureVector, server = TRUE)
  
   # Generate a plot of the data. Also uses the inputs to build
   # the plot label. Note that the dependencies on both the inputs
@@ -45,7 +45,7 @@ shinyServer(function(input, output, session) {
       Sys.sleep(0.1)
     }
 
-  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
+  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=.20, cnaDir="Amp", pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
 globalResult <<- myRes[[2]];    	
 myRes[[2]];
   })
@@ -79,7 +79,7 @@ myRes[[2]];
       Sys.sleep(0.1)
     }
 
-  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
+  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=.20, cnaDir="Amp", pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
 	 plotVolcanoTrain(myRes[[1]], hitp=as.numeric(input$pval), as.numeric((input$logFC)));
   })
  
@@ -120,7 +120,7 @@ myRes[[2]];
       Sys.sleep(0.1)
     }
 
-  	myRes <- SigLimmaTrain(input$dataset,input$gene, thresh=.20, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
+  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=.20, cnaDir="Amp", pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
 	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]), scale="row");
   })
   
