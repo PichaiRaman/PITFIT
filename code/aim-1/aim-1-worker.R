@@ -24,13 +24,13 @@ expPatientList <- colnames(expDataList[[1]]);
 #Function to come up with the feature type and pass to
 #The appropriate method
 ##############################
-pitfitAnalyzeAim1 <- function(myData, myFeature, expThresh=.20, cnaDir = "Amp", pvalThresh=.25, logFCThresh=1)
+pitfitAnalyzeAim1 <- function(myData, myFeature, thresh=.20, cnaDir = "Amp", pvalThresh=.25, logFCThresh=1)
 {
   #If the feature is Expression
   if(grepl("_Exp", myFeature))
   {
     myFeature <- strsplit(myFeature, "_")[[1]][1];
-    output <- expAnalysis(myData, myFeature, expThresh, pvalThresh, logFCThresh)
+    output <- expAnalysis(myData, myFeature, thresh, pvalThresh, logFCThresh)
   }
   
   #If the feature is Copy Number
