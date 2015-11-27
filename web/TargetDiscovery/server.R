@@ -1,6 +1,6 @@
 source("../../code/aim-1/aim-1-worker.R");
 library(shiny)
-library(pheatmap)
+library(d3heatmap)
 library(plotly);
 
 globalResult <- "";
@@ -92,7 +92,7 @@ myRes[[2]];
 
 
   # Generate a summary of the data
-  output$summary <- renderPlot({
+  output$summary <- renderD3heatmap({
   	
     input$submit # Re-run when button is clicked
 
