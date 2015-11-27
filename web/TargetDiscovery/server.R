@@ -45,7 +45,7 @@ shinyServer(function(input, output, session) {
       Sys.sleep(0.1)
     }
 
-  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=input$thresh, cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
+  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=as.numeric(input$thresh), cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
 globalResult <<- myRes[[2]]; 
 myRes[[2]];
   })
@@ -79,7 +79,7 @@ myRes[[2]];
       Sys.sleep(0.1)
     }
 
-  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=input$thresh, cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
+  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=as.numeric(input$thresh), cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
 	 plotVolcanoTrain(myRes[[1]], hitp=as.numeric(input$pval), as.numeric((input$logFC)));
   })
  
@@ -120,7 +120,7 @@ myRes[[2]];
       Sys.sleep(0.1)
     }
 
-  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=input$thresh, cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
+  	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=as.numeric(input$thresh), cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
 	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]), scale="row");
   })
   
