@@ -289,7 +289,7 @@ plotVolcanoTrain <- function(result, hitp=.05, hitlfc=1)
 {
 result[,"Gene"] <- rownames(result);
 result[,"HIT"] <- result[,"adj.P.Val"]<hitp&abs(result[,"logFC"])>hitlfc;
-p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=HIT, label=Gene))+geom_point(size=2)+ scale_y_continuous(trans=reverselog_trans(10))+theme_bw()+scale_colour_manual(values=c("gray", "red"));
+p <- ggplot(result, aes(x=logFC, y= adj.P.Val, color=HIT))+geom_point(aes(text = Gene), size=4)+ scale_y_continuous(trans=reverselog_trans(10))+theme_bw()+scale_colour_manual(values=c("gray", "red"));
 return(p);
 }
 
