@@ -21,6 +21,16 @@ shinyUI(fluidPage(
 
       br(),
       
+      textInput("thresh", 
+                  "Expression Quantile Cut-off", 
+                 ".20"),
+      br(),
+      
+      textInput("cnaDir", 
+                  "Copy-Number Amp or Del", 
+                 "Amp"),
+      br(),
+      
       textInput("pval", 
                   "Adjusted P-Value Cutoff", 
                  ".25"),
