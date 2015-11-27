@@ -32,7 +32,8 @@ pitfitAnalyzeAim1 <- function(myData, myFeature, expThresh=.20, cnaDir = "Amp", 
     myFeature <- strsplit(myFeature, "_")[[1]][1];
     output <- expAnalysis(myData, myFeature, expThresh, pvalThresh, logFCThresh)
   }
-
+  
+  #If the feature is Copy Number
   if(grepl("_Cna", myFeature))
   {
     myFeature <- strsplit(myFeature, "_")[[1]][1];
