@@ -46,9 +46,6 @@ pitfitAnalyzeAim1 <- function(myData, myFeature, thresh=.20, cnaDir = "Amp", pva
   }
 
 
-
-
-
 return(output);
 }
 
