@@ -17,9 +17,6 @@ library("edgeR");
 #Read in data
 load("../../data/ParsedTCGA.RData");
 
-#expression patient list
-expPatientList <- colnames(expDataList[[1]]);
-
 ##############################
 #Function to come up with the feature type and pass to
 #The appropriate method
@@ -78,8 +75,8 @@ myData <- expDataList[[myData]];
 
 #pull our vector of values for gene
 myVect <- myMutData[myGene,];
-group1 <-  intersect(expPatientList, gsub("-", ".", names(myVect[which(myVect==c("HIGH", "MODERATE"))])));
-group2 <-  intersect(expPatientList, gsub("-", ".", names(myVect[which(myVect==c("LOW", "NONE"))])));
+group1 <-  intersect(colnames(myData), gsub("-", ".", names(myVect[which(myVect==c("HIGH", "MODERATE"))])));
+group2 <-  intersect(colnames(myData), gsub("-", ".", names(myVect[which(myVect==c("LOW", "NONE"))])));
 
 #Create targets to run limma
 tmpLow <- data.frame(group2, rep("LOW", length(group2)))
@@ -151,14 +148,14 @@ myData <- expDataList[[myData]];
 myVect <- myCnaData[myGene,];
 if(cnaDir=="Amp")
 {
-group1 <-  intersect(expPatientList, names(myVect[which(myVect>1)]));
-group2 <-  intersect(expPatientList, names(myVect[which(myVect<.5)]));
+group1 <-  intersect(colnames(myData), names(myVect[which(myVect>1)]));
+group2 <-  intersect(colnames(myData), names(myVect[which(myVect<.5)]));
 }
 
 if(cnaDir=="Del")
 {
-group1 <-  intersect(expPatientList, names(myVect[which(myVect<(-1))]));
-group2 <-  intersect(expPatientList, names(myVect[which(myVect>(-.5))]));
+group1 <-  intersect(colnames(myData), names(myVect[which(myVect<(-1))]));
+group2 <-  intersect(colnames(myData), names(myVect[which(myVect>(-.5))]));
 }
 
 #Create targets to run limma
