@@ -122,7 +122,7 @@ myRes[[2]];
     }
 
   	myRes <- pitfitAnalyzeAim1(input$dataset,input$gene, thresh=as.numeric(input$thresh), cnaDir=input$cnaDir, pvalThresh=as.numeric(input$pval), logFCThresh=as.numeric(input$logFC));
-	pheatmap(plotHeatmap(myRes[[2]], myRes[[3]]), scale="row");
+	d3heatmap(plotHeatmap(myRes[[2]], myRes[[3]]));
   })
   
   
