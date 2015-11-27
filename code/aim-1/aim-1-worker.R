@@ -17,25 +17,52 @@ library("edgeR");
 #Read in data
 load("../../data/ParsedTCGA.RData");
 
-#Features for selectize
-expGeneFeatures <- rownames(expDataList[[1]]);
+##############################
+#Function to come up with the feature type and pass to
+#The appropriate method
+##############################
+pitfitAnalyzeAim1 <- function(myData, myFeature, expThresh=.20, cnaDir = "Amp", pvalThresh=.25, logFCThresh=1)
+{
+  #If the feature is Expression
+  if(grepl("_Exp", myFeature))
+  {
+    myFeature <- strsplit(myFeature, "_")[[1]][1];
+    output <- expAnalysis(myData, myFeature, expThresh, cnaDir, pvalThresh, logFCThresh)
+  }
+
+  if(grepl("_Cna", myFeature))
+  {
+    myFeature <- strsplit(myFeature, "_")[[1]][1];
+    output <- cnaAnalysis((myData, myFeature, expThresh, cnaDir, pvalThresh, logFCThresh)
+  }
+
+
+
+
+
+
+
+}
+
+
 
 ##############################
+#cnaAnalysis
 #Function to come up with differentially
-#expressed gene based on a given variable
+#expressed gene based on cna
 #and set of filters
 #
 # Example:
-# myData <-"OV";
+# myData <-"ov";
 # myGene <- "FOXM1"
 # thresh <- .25
 # pvalThresh <- .25
 # logFCThresh <- 1
 ##############################
-SigLimmaTrain <- function(myData, myGene, thresh=.20, pvalThresh=.25, logFCThresh=1)
+cnaAnalysis <- function(myData, myGene, thresh=.20, pvalThresh=.25, logFCThresh=1)
 {
-
-myData <- expDataList[[myData]];
+#Choose the data set
+myData <- cnaDataList[[myData]];
 
 #pull our vector of values for gene
 myVect <- myData[myGene,];
@@ -46,6 +73,79 @@ names(myVectECDF) <- names(myVect);
 low <- names(myVectECDF[myVectECDF<thresh]);
 high <- names(myVectECDF[myVectECDF>(1-thresh)]); 
 
+#Create targets to run limma
+tmpLow <- data.frame(low, rep("LOW", length(low)))
+colnames(tmpLow) <- c("SAMP", "CLASS");
+
+tmpHigh <- data.frame(high, rep("HIGH", length(high)))
+colnames(tmpHigh) <- c("SAMP", "CLASS");
+
+targets <- rbind(tmpLow, tmpHigh);
+targets[,2] <- as.factor(targets[,2]);
+rownames(targets) <- targets[,1];
+targets <- targets[-1];
+
+fTarget <- factor(targets[,"CLASS"]);
+design <- model.matrix(~fTarget);
+
+
+#Run Voom/Limma
+trainDatatmp <- myData[,rownames(targets)];
+y <- DGEList(counts=trainDatatmp, genes=rownames(trainDatatmp))
+y <- calcNormFactors(y)
+v <- voom(y,design,plot=F);
+voomData <- v$E
+
+design <- model.matrix(~0+fTarget);
+colnames(design) <- gsub("fTarget", "", colnames(design));
+fit <- lmFit(voomData, design);
+myConts <- c("HIGH-LOW");
+contrast.matrix <- makeContrasts(contrasts=myConts, levels=design)
+fit2 <- contrasts.fit(fit, contrast.matrix)
+fit2 <- eBayes(fit2)
+
+#Okay now combine all into one result data frame
+result <- topTable(fit2, number=60000)[,c("logFC", "P.Value", "adj.P.Val")];
+tmpLimmaOut <- result[abs(result[,"logFC"])>logFCThresh,];
+tmpLimmaOut <- tmpLimmaOut[tmpLimmaOut[,"adj.P.Val"]<pvalThresh,];
+tmpLimmaOut <- data.frame(rownames(tmpLimmaOut), tmpLimmaOut);
+colnames(tmpLimmaOut)[1] <- "Gene";
+
+output <- list();
+output$all <- result;
+output$hits <- tmpLimmaOut;
+output$data <- voomData;
+return(output);
+}
+
+
+
+##############################
+#expAnalysis
+#Function to come up with differentially
+#expressed gene based on expression
+#and set of filters
+#
+# Example:
+# myData <-"ov";
+# myGene <- "FOXM1"
+# thresh <- .25
+# pvalThresh <- .25
+# logFCThresh <- 1
+##############################
+expAnalysis <- function(myData, myGene, thresh=.20, pvalThresh=.25, logFCThresh=1)
+{
+#Choose the data set
+myData <- expDataList[[myData]];
+
+#pull our vector of values for gene
+myVect <- myData[myGene,];
+myEcdf <- ecdf(myVect);
+myVectECDF <- myEcdf(myVect);
+names(myVectECDF) <- names(myVect);
+
+low <- names(myVectECDF[myVectECDF<thresh]);
+high <- names(myVectECDF[myVectECDF>(1-thresh)]); 
 
 #Create targets to run limma
 tmpLow <- data.frame(low, rep("LOW", length(low)))
