@@ -55,16 +55,12 @@ mutDataList[[cancVec[i]]] <- mutDataTmp;
 
 
 #Get Clinical data 
-#setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
-#midDir <- list.files()
-#setwd(paste(getwd(), "/", midDir, "/", sep=""));
-#clinDirN <- list.files()[grep("Clinical", list.files())];
-#setwd(paste(getwd(), "/", clinDirN, "/", sep=""));
-#clinDataTmp <- read.delim(paste(getwd(), "/", list.files()[grep('merged_only_clinical_clin_format.txt', list.files())], sep=""));
-#rownames(clinDataTmp) <- clinDataTmp[,1];
-#clinDataTmp <- clinDataTmp[-1];
-#clinDataTmp <- data.frame(t(clinDataTmp));
-#clinDataList[[cancVec[i]]] <- clinDataTmp;
+clinDataTmp <- read.delim("data_bcr_clinical_data.txt");
+
+
+
+
+clinDataList[[cancVec[i]]] <- clinDataTmp;
 
 }
 
