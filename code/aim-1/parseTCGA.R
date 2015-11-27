@@ -65,10 +65,9 @@ clinDataTmp <- read.delim("data_bcr_clinical_data.txt");
 clinCols <- c("PATIENT_ID", "GENDER", "CLINICAL_STAGE", "DAYS_TO_BIRTH", "OS_STATUS", "OS_MONTHS", "DFS_STATUS", "DFS_MONTHS")
 clinDataTmp <- clinDataTmp[,clinCols];  
 clinDataList[[cancVec[i]]] <- clinDataTmp;
-featureVector <- c(featureVector, paste(clinCols, "Clin", sep="_"));
 print(paste("Done ", cancVec[i], sep=""));
 }
-featureVector <- unique(featureVector);
+featureVector <- unique(featureVector, c("Overall-Survival_Clin", "Progression-Free-Survival_Clin", "Age_Clin", "Stage_Clin", "Gender_Clin");
 
 keep(clinDataList, expDataList, mutDataList,cnaDataList, featureVector, sure=T);
 save.image("/bigdata/PITFIT_Data/ParsedTCGA.RData");
