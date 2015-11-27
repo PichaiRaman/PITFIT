@@ -7,48 +7,53 @@
 
 #Call libraries
 library("gdata");
+library("tidyr");
 
 #Find name of top directory
-BaseDir <- "/srv/shiny-server/PITFIT/data/"
-topDir <- list.files(BaseDir)[grep("stddata", list.files(BaseDir))]
+BaseDir <- "/srv/shiny-server/PITFIT/data/TCGA_Data/"
 
 #Vector of cancers & lists to store all data
-cancVec <- c("OV", "PAAD", "PRAD", "READ")
+cancVec <- c("ov", "paad", "prad")
 clinDataList <- list();
 mutDataList <- list();
 cnaDataList <- list();
 expDataList <- list();
 
-#Function to collaspe mutation files into 1
-collapseMut <- function()
-{
-	
-myFiles <- list.files()[grep("TCGA", list.files())];
-
-allDat <- data.frame(myFiles[i], read.delim(myFiles[i], skip=3))
-
-for(i in 2:length(myFiles))
-{	
-	tmpDat <- data.frame(myFiles[i], read.delim(myFiles[i], skip=3))
-	allDat <- rbind(allDat, tmpDat);
-}
-
-return(allDat);
-}
-
-pullGeneNames <- function(x)
-{
-myEnd <- which(strsplit(as.character(x), "")[[1]]=="|")-1;
-x <- substring(x, 1, myEnd);
-}
-
-factToNum <- function(x)
-{
-return(as.numeric(as.character(x)));
-}
-
 for(i in 1:length(cancVec))
 {
+#First set basedir
+setwd(paste(BaseDir, cancVec[i], "/", "tcga", sep=""));
+
+#Get Expression data 
+expDataTmp <- read.delim("data_RNA_Seq_v2_expression_median.txt", stringsAsFactors=F);
+rownames(expDataTmp) <- expDataTmp[,1];
+expDataTmp <- expDataTmp[-1:-2];
+expDataList[[cancVec[i]]] <- expDataTmp;
+
+#Get Copy Number data 
+cnaDataTmp <- read.delim("data_log2CNA.txt", stringsAsFactors=F);
+rownames(cnaDataTmp) <- cnaDataTmp[,1];
+cnaDataTmp <- cnaDataTmp[-1:-2];
+cnaDataList[[cancVec[i]]] <- cnaDataTmp;
+
+#Get Mutation data 
+mutDataTmp <- read.delim("data_mutations_extended.txt", header=T, skip=1);
+mutDataTmp <- mutDataTmp[,c("Hugo_Symbol", "IMPACT", "Tumor_Sample_Barcode")];
+mutDataTmp[,"tmpConc"] <- paste(mutDataTmp[,"Hugo_Symbol"], mutDataTmp[,"Tumor_Sample_Barcode"], sep="");
+mutDataTmp <- mutDataTmp[mutDataTmp[,2]!="",];
+mutDataTmp[,2] <- factor(mutDataTmp[,2], levels=c("HIGH", "MODERATE","MODIFIER", "LOW"));
+mutDataTmp <- mutDataTmp[order(mutDataTmp[,2]),];
+mutDataTmp <- mutDataTmp[!duplicated(mutDataTmp[,4]),];
+mutDataTmp <- mutDataTmp[1:3];
+mutDataTmp <- spread(mutDataTmp, Tumor_Sample_Barcode, IMPACT)
+mutDataTmp <- as.matrix(mutDataTmp)
+mutDataTmp[is.na(mutDataTmp)]<- "NONE";
+mutDataTmp <- as.data.frame(mutDataTmp);
+rownames(mutDataTmp) <- mutDataTmp[,1];
+mutDataTmp <- mutDataTmp[-1];
+mutDataList[[cancVec[i]]] <- mutDataTmp;
+
+
 #Get Clinical data 
 #setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
 #midDir <- list.files()
@@ -61,45 +66,6 @@ for(i in 1:length(cancVec))
 #clinDataTmp <- data.frame(t(clinDataTmp));
 #clinDataList[[cancVec[i]]] <- clinDataTmp;
 
-#Get Expression data 
-setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
-midDir <- list.files()
-setwd(paste(getwd(), "/", midDir, "/", sep=""));
-expDirN <- list.files()[grep("rnaseqv2", list.files())];
-setwd(paste(getwd(), "/", expDirN, "/", sep=""));
-expDataTmp <- read.delim(paste(getwd(), "/", list.files()[grep('rnaseqv2__illuminahiseq', list.files())], sep=""));
-expDataTmp <- expDataTmp[-1,];
-#Remove any rows without gene names
-expDataTmp <- expDataTmp[!grepl("\\?", as.character(expDataTmp[,1])),]
-myGeneNames <- sapply(expDataTmp[,1], FUN=pullGeneNames);
-removeRow <- which(myGeneNames %in% myGeneNames[duplicated(myGeneNames)])[1];
-keepRows <- setdiff(c(1:length(myGeneNames)), removeRow);
-myGeneNames <- myGeneNames[keepRows];
-expDataTmp <- expDataTmp[keepRows,];
-rownames(expDataTmp) <- myGeneNames;
-expDataTmp <- expDataTmp[-1];
-expDataTmp <- sapply(expDataTmp, FUN=factToNum);
-rownames(expDataTmp) <- myGeneNames;
-expDataList[[cancVec[i]]] <- expDataTmp;
-
-#Get Mutation data later
-#setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
-#midDir <- list.files()
-#setwd(paste(getwd(), "/", midDir, "/", sep=""));
-#mutDirN <- list.files()[grep("Mutation", list.files())];
-#setwd(paste(getwd(), "/", mutDirN, "/", sep=""));
-#mutDataTmp <- collapseMut();
-#mutDataList[[cancVec[i]]] <- mutDataTmp;
-
-#Get Copy Number data 
-#setwd(paste(BaseDir , topDir, "/", cancVec[i], sep=""));
-#midDir <- list.files()
-#setwd(paste(getwd(), "/", midDir, "/", sep=""));
-#cnaDirN <- list.files()[grep("Merge_snp", list.files())];
-#setwd(paste(getwd(), "/", cnaDirN, "/", sep=""));
-#cnaDataTmp <- read.delim(paste(getwd(), "/", list.files()[grep('snp', list.files())], sep=""));
-#cnaDataTmp <- data.frame(cnaDataTmp);
-#cnaDataList[[cancVec[i]]] <- cnaDataTmp;
 }
 
 keep(clinDataList, expDataList, mutDataList,cnaDataList, sure=T);
