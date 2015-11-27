@@ -37,14 +37,14 @@ pitfitAnalyzeAim1 <- function(myData, myFeature, expThresh=.20, cnaDir = "Amp", 
   if(grepl("_Cna", myFeature))
   {
     myFeature <- strsplit(myFeature, "_")[[1]][1];
-    output <- cnaAnalysis((myData, myFeature, cnaDir, pvalThresh, logFCThresh)
+    output <- cnaAnalysis(myData, myFeature, cnaDir, pvalThresh, logFCThresh)
   }
 
   #If the feature is Mutation
   if(grepl("_Mut", myFeature))
   {
     myFeature <- strsplit(myFeature, "_")[[1]][1];
-    output <- mutAnalysis((myData, myFeature, pvalThresh, logFCThresh)
+    output <- mutAnalysis(myData, myFeature, pvalThresh, logFCThresh)
   }
 
 
