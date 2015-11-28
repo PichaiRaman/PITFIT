@@ -4,7 +4,9 @@
 #11/28/2015
 ############################
 
-/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens
+#First let's 
+setwd("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens");
+
 
 
 
