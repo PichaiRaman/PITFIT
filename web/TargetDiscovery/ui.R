@@ -1,5 +1,6 @@
 library(shiny)
 library(plotly)
+library(d3heatmap)
 
 # Define UI for random distribution application 
 shinyUI(fluidPage(theme = "bootstrap.css",
