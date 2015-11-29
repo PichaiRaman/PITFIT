@@ -9,9 +9,6 @@ library("sqldf")
 library("RSQLite")
 library("GSEABase");
 
-
-
-
 #First let's start parse genemania data
 setwd("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens");
 allFiles <-list.files();
@@ -29,18 +26,30 @@ interpro <- geneIds(getGmt("Attributes.InterPro.gmt"));
 txnFactor <- geneIds(getGmt("Attributes.Transcriptional-factor-targets-2013.gmt"));
 drugs <- geneIds(getGmt("Attributes.Drug-interactions-2013.gmt")); 
 
+#Function to convert ID's
 convertID <- function(x)
 {
 rownames(mappingFile) <- mappingFile[,1];
 y <- mappingFile[x,2];
 return(as.character(y));
 }
+#Function to pull out stem
+pullOutStem <- function(x)
+{
+x <-substring(x, 1,5);
+x <- gsub("Physi", "Physical_Interaction", x);
+x <- gsub("Predi", "Predicted_Interaction", x);
+x <- gsub("Genet", "Genetic_Interactions", x);
+x <- gsub("Co-lo", "Co-localization", x);
+x <- gsub("Co-ex", "Co-expression", x);
+x <- gsub("Pathw", "Pathway", x);
+return(x);
+}
+
 #Convert to gene symbol
 names(drugs) <- convertID(names(drugs));
 names(txnFactor) <- convertID(names(txnFactor));
 names(interpro) <- convertID(names(interpro));
-
-
 save.image("/home/ramanp/pitfit/data/GeneManiaROBJ.RData");
 
 print("Finished writing R Object");
@@ -49,26 +58,25 @@ interactionFilesType <- c("Physi", "Predi", "Genet", "Co-lo", "Co-ex", "Pathw");
 interactionFiles <- allFiles[substring(allFiles, 1,5)%in%interactionFilesType];
 interactionDF <- data.frame(read.delim(interactionFiles[1]), gsub(".txt", "", interactionFiles[1]))
 colnames(interactionDF)[4] <- "source"
-for(i in 2:length(interactionFiles))
+interactionDF[,"Type"] <- pullOutStem(interactionDF[,"source"]);
+
+
+#for(i in 2:length(interactionFiles))
+for(i in 2:2)
 {
-intDFTmp <- data.frame(read.delim(interactionFiles[i], stringsAsFactors=F), gsub(".txt", "", interactionFiles[i]))
+intDFTmp <- read.delim(interactionFiles[i], stringsAsFactors=F);
+intDFTmp[,"source"] <- gsub(".txt", "", interactionFiles[i])
 colnames(intDFTmp)[4] <- "source"
+intDFTmp[,"Type"] <- pullOutStem(intDFTmp[,"source"]);
 interactionDF <- rbind(interactionDF, intDFTmp);
 print(i/length(interactionFiles));
 }
 print("Finished reading file");
-pullOutStem <- function(x)
-{
-myEnd <- gregexpr("\\.", x)[[1]][1]-1; 
-out <- substring(x, 1, myEnd);
-}
 
 #Map it to Gene Symbol
-interactionDF <- merge(interactionDF, mappingFile, by.x="Gene_A", by.y="Preferred_Name");
-interactionDF <- merge(interactionDF, mappingFile, by.x="Gene_B", by.y="Preferred_Name");
-interactionDF <- interactionDF[,c(5,6,3,4)];
-colnames(interactionDF)[1:2] <- c("Gene_A", "Gene_B");
-interactionDF[,"Type"] <- sapply(interactionDF[,"source"], FUN=pullOutStem);
+interactionDF[,1] <- convertID(interactionDF[,1]);
+interactionDF[,2] <- convertID(interactionDF[,2]);
+print("Finished mapping files");
 
 setwd("/bigdata/PITFIT_Data/");
 db <- dbConnect(SQLite(), dbname="aim2.sqlite")
