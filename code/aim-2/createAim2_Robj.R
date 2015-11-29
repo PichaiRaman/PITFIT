@@ -60,27 +60,27 @@ interactionDF <- data.frame(read.delim(interactionFiles[1]), gsub(".txt", "", in
 colnames(interactionDF)[4] <- "source"
 interactionDF[,"Type"] <- pullOutStem(interactionDF[,"source"]);
 
-
-#for(i in 2:length(interactionFiles))
-for(i in 2:2)
-{
-intDFTmp <- read.delim(interactionFiles[i], stringsAsFactors=F);
-intDFTmp[,"source"] <- gsub(".txt", "", interactionFiles[i])
-colnames(intDFTmp)[4] <- "source"
-intDFTmp[,"Type"] <- pullOutStem(intDFTmp[,"source"]);
-interactionDF <- rbind(interactionDF, intDFTmp);
-print(i/length(interactionFiles));
-}
-print("Finished reading file");
-
 #Map it to Gene Symbol
 interactionDF[,1] <- convertID(interactionDF[,1]);
 interactionDF[,2] <- convertID(interactionDF[,2]);
-print("Finished mapping files");
 
-setwd("/bigdata/PITFIT_Data/");
 db <- dbConnect(SQLite(), dbname="aim2.sqlite")
+setwd("/bigdata/PITFIT_Data/");
 dbWriteTable(db, "GeneMania_Interactions", interactionDF)
+for(i in 2:length(interactionFiles))
+{
+intDFTmp <- read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens/", interactionFiles[i], sep=""), stringsAsFactors=F);
+intDFTmp[,"source"] <- gsub(".txt", "", interactionFiles[i])
+colnames(intDFTmp)[4] <- "source"
+intDFTmp[,"Type"] <- pullOutStem(intDFTmp[,"source"]);
+intDFTmp[,1] <- convertID(intDFTmp[,1]);
+intDFTmp[,2] <- convertID(intDFTmp[,2]);
+dbWriteTable(db, "GeneMania_Interactions", intDFTmp, append=T)
+print(i/length(interactionFiles));
+}
+dbDisconnect(db)
+print("Finished reading file");
+
 
 
 
