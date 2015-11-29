@@ -64,8 +64,8 @@ interactionDF[,"Type"] <- pullOutStem(interactionDF[,"source"]);
 interactionDF[,1] <- convertID(interactionDF[,1]);
 interactionDF[,2] <- convertID(interactionDF[,2]);
 
-db <- dbConnect(SQLite(), dbname="aim2.sqlite")
 setwd("/bigdata/PITFIT_Data/");
+db <- dbConnect(SQLite(), dbname="aim2.sqlite")
 dbWriteTable(db, "GeneMania_Interactions", interactionDF)
 for(i in 2:length(interactionFiles))
 {
