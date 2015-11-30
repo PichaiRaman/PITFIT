@@ -40,6 +40,16 @@ tmpDruggable[is.na(tmpDruggable[,"Score_Druggability"]),"Score_Druggability"] <-
 return(tmpDruggable);
 }
 
+#Function to see if known to be regulated by a txnFactor
+isRegByCancerTxnFactor <- function(output)
+{
+
+
+
+}
+
+
+
 
 ##############################
 #Main Function to prioritize and rank
