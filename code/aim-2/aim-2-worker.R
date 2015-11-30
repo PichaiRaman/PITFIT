@@ -7,7 +7,11 @@
 ##############################
 
 #call libraries
+library("stringr");
 
+#Read in list of gene names
+
+featureList <- read.delim("/srv/shiny-server/PITFIT/data/TCGA_Data/ov/tcga/data_RNA_Seq_v2_expression_median.txt", stringsAsFactors=F)[,1];
 
 #Read & format druggability data#####################
 drugInt <- read.delim("../../data/categories.tsv", stringsAsFactors=F);
