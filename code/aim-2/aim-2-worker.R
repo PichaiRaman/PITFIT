@@ -7,7 +7,7 @@
 ##############################
 
 #call libraries
-
+library("stringr");
 
 #Load gene mania data
 load("../../data/GeneManiaROBJ.RData");
@@ -19,6 +19,7 @@ rownames(druggable) <- druggable[,1];
 druggable[,"Drug_Score"] <- str_count(druggable[,"category_sources"], ",")+1
 druggable <- druggable[,c("entrez_gene_symbol", "category_sources", "Drug_Score")]
 colnames(druggable) <- c("Gene", "Sources_Druggability", "Score_Druggability");
+druggable <- druggable[1:3];
 #####################################################
 
 #Read & format cancer data#####################
@@ -43,11 +44,21 @@ return(tmpDruggable);
 #Function to see if known to be regulated by a txnFactor
 isRegByCancerTxnFactor <- function(output)
 {
-
-
-
+tmpGenes <- as.character(output[,1]);
+myOut <- data.frame(sapply(tmpGenes, FUN=txnRegHelper), sapply(tmpGenes, FUN=txnRegHelperScore))
+colnames(myOut) <- c("TF_Regulation", "Score_Regulation");
+myOut <- data.frame(output, myOut);
 }
-
+txnRegHelper <- function(geneName)
+{
+tmpOut <- txnFactor_genes[[geneName]]
+tmpOut <- paste(tmpOut, collapse=", ")
+}
+txnRegHelperScore <- function(geneName)
+{
+tmpOut <- txnFactor_genes[[geneName]]
+tmpOut <- length(intersect(tmpOut, cancGene[,1]));
+}
 
 
 
@@ -62,6 +73,10 @@ output <- data.frame(myCancer, geneList);
 colnames(output) <- c("Cancer", "Gene");
 #Add Druggability score to genes
 output <- isDruggable(output);
+
+#Add regulation piece
+output <- isRegByCancerTxnFactor(output);
+
 return(output);
 }
 
