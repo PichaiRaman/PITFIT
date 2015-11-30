@@ -8,6 +8,7 @@
 library("sqldf")
 library("RSQLite")
 library("GSEABase");
+library("stringr");
 
 #First let's start parse genemania data
 setwd("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens");
@@ -38,7 +39,7 @@ y <- substring(x, (str_locate(x, "\\$")[1]+1), str_length(x));
 y <- substring(y, 1, (str_locate(y, "_")[1]-1))
 return(y);
 }
-txnFactor_Conv <- lapply(txnFactor, FUN=formatTxn);
+txnFactor_genes <- lapply(txnFactor, FUN=formatTxn);
 
 #Function to convert ID's
 convertID <- function(x)
@@ -63,6 +64,7 @@ return(x);
 #Convert to gene symbol
 names(drugs) <- convertID(names(drugs));
 names(txnFactor) <- convertID(names(txnFactor));
+names(txnFactor_genes) <- convertID(names(txnFactor_genes));
 names(interpro) <- convertID(names(interpro));
 save.image("/home/ramanp/pitfit/data/GeneManiaROBJ.RData");
 
