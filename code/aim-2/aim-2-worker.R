@@ -8,13 +8,12 @@
 
 #call libraries
 library("stringr");
-<<<<<<< HEAD
+
 
 #Read in list of gene names
 
 featureList <- read.delim("/srv/shiny-server/PITFIT/data/TCGA_Data/ov/tcga/data_RNA_Seq_v2_expression_median.txt", stringsAsFactors=F)[,1];
-=======
->>>>>>> 8892c93a773653d9185d47a9594e6cfcddf67ce6
+
 
 #Load gene mania data
 load("../../data/GeneManiaROBJ.RData");
