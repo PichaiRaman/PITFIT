@@ -13,6 +13,9 @@ library("stringr");
 
 featureList <- read.delim("/srv/shiny-server/PITFIT/data/TCGA_Data/ov/tcga/data_RNA_Seq_v2_expression_median.txt", stringsAsFactors=F)[,1];
 
+#Load gene mania data
+load("../../data/GeneManiaROBJ.RData");
+
 #Read & format druggability data#####################
 drugInt <- read.delim("../../data/categories.tsv", stringsAsFactors=F);
 druggable <- drugInt[drugInt[,"category"]=="DRUGGABLE GENOME",]
@@ -22,6 +25,11 @@ druggable <- druggable[,c("entrez_gene_symbol", "category_sources", "Drug_Score"
 colnames(druggable) <- c("Gene", "Sources_Druggability", "Score_Druggability");
 #####################################################
 
+#Read & format cancer data#####################
+cancGeneCens <- read.delim("../../data/CancerGeneCensus.tsv", stringsAsFactors=F);
+cancGene <- cancGeneCens[,c("Gene.Symbol", "Tumour.Types.Somatic.")];
+colnames(cancGene) <- c("cgc_Gene", "cgc_Tumour.Type")
+#####################################################
 
 
 
