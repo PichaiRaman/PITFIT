@@ -14,7 +14,7 @@ setwd("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapien
 allFiles <-list.files();
 
 #Network file to get info on netorks
-networks <- read.delim("networks.txt");
+networks <- read.delim("networks.txt"); #not used currently
 
 #Mapping file to convert ID's
 mappingFile <- read.delim("identifier_mappings.txt");
@@ -22,9 +22,23 @@ mappingFile <- mappingFile[mappingFile[,3]=="Gene Name",1:2];
 
 #now let's read in gmt files
 gmtFiles <- allFiles[grep(".gmt", allFiles)];
-interpro <- geneIds(getGmt("Attributes.InterPro.gmt"));
+interpro <- geneIds(getGmt("Attributes.InterPro.gmt")); #not used currently
 txnFactor <- geneIds(getGmt("Attributes.Transcriptional-factor-targets-2013.gmt"));
-drugs <- geneIds(getGmt("Attributes.Drug-interactions-2013.gmt")); 
+drugs <- geneIds(getGmt("Attributes.Drug-interactions-2013.gmt")); #not used currently
+
+#Function to pull out just gene symbol TF's
+formatTxn <- function(x)
+{
+x <- as.character(sapply(x, FUN=pullGene));
+x <- as.character(na.omit(x));
+}
+pullGene <- function(x)
+{
+y <- substring(x, (str_locate(x, "\\$")[1]+1), str_length(x));
+y <- substring(y, 1, (str_locate(y, "_")[1]-1))
+return(y);
+}
+txnFactor_Conv <- lapply(txnFactor, FUN=formatTxn);
 
 #Function to convert ID's
 convertID <- function(x)
