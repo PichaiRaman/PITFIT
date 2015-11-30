@@ -9,7 +9,7 @@ globalVolcano <- "";
 shinyServer(function(input, output, session) {
   
  
-  updateSelectizeInput(session, 'gene', choices = c("FOXM1", "MYC", "E2F1"), server = TRUE)
+  updateSelectizeInput(session, 'gene', choices = featureList, server = TRUE)
  
   # Generate a plot of the data. Also uses the inputs to build
   # the plot label. Note that the dependencies on both the inputs
