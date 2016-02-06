@@ -34,6 +34,10 @@ cancGene <- cancGeneCens[,c("Gene.Symbol", "Tumour.Types.Somatic.")];
 colnames(cancGene) <- c("cgc_Gene", "cgc_Tumour.Type")
 #####################################################
 
+#Read & format tm data#####################
+tmData <- read.delim("../../data/tmList.txt");
+rownames(tmData) <- tmData[,1];
+#####################################################
 
 
 #########Functions to add data and create score#############
@@ -66,6 +70,18 @@ tmpOut <- txnFactor_genes[[geneName]]
 tmpOut <- length(intersect(tmpOut, cancGene[,1]));
 }
 
+#Function to see if it is a TM Protein 
+isTM <- function(output)
+{
+tmpGenes <- as.character(output[,1]);
+myOut <- tmData[tmpGenes,5];
+myOut[is.na(myOut)] <- 0;
+ifelse(myOut==1, "Yes", "No");
+myOut <- data.frame(myOut);
+colnames(myOut) <- c("isTM");
+myOut <- data.frame(output, myOut);
+}
+
 
 
 ##############################
@@ -77,11 +93,15 @@ pitfitAnalyzeAim2 <- function(myCancer, geneList)
 {
 output <- data.frame(myCancer, geneList);
 colnames(output) <- c("Cancer", "Gene");
+
 #Add Druggability score to genes
 output <- isDruggable(output);
 
 #Add regulation piece
 output <- isRegByCancerTxnFactor(output);
+
+#Add tm piece
+output <- isTM(output);
 
 return(output);
 }
