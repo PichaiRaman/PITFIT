@@ -26,6 +26,7 @@ gmtFiles <- allFiles[grep(".gmt", allFiles)];
 interpro <- geneIds(getGmt("Attributes.InterPro.gmt")); #not used currently
 txnFactor <- geneIds(getGmt("Attributes.Transcriptional-factor-targets-2013.gmt"));
 drugs <- geneIds(getGmt("Attributes.Drug-interactions-2013.gmt")); #not used currently
+cPathways <- geneIds(getGmt("Attributes.Consolidated-Pathways-2013.gmt"));
 
 #Function to pull out just gene symbol TF's
 formatTxn <- function(x)
@@ -66,7 +67,8 @@ names(drugs) <- convertID(names(drugs));
 names(txnFactor) <- convertID(names(txnFactor));
 names(txnFactor_genes) <- convertID(names(txnFactor_genes));
 names(interpro) <- convertID(names(interpro));
-save.image("/home/ramanp/pitfit/data/GeneManiaROBJ.RData");
+names(cPathways) <- convertID(names(cPathways));
+
 
 print("Finished writing R Object");
 print("Started Reading files");
@@ -97,7 +99,7 @@ print(i/length(interactionFiles));
 dbDisconnect(db)
 print("Finished reading file");
 
-
+save.image("/home/ramanp/pitfit/data/GeneManiaROBJ.RData");
 
 
 
