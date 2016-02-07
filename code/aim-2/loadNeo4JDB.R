@@ -10,6 +10,7 @@
 #using package RNeo4J
 #https://github.com/nicolewhite/RNeo4j
 #Please note when installing you may need to install openssldevel first  : yum install -y openssl-devel
+#Also make sure to disable authentication in conf/neo4j-server : dbms.security.auth_enabled=false
 
 
 #Call library
