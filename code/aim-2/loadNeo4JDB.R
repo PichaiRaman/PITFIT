@@ -15,3 +15,27 @@
 
 #Call library
 library(RNeo4j)
+
+#Start a graph & if its full get rid of 
+graph = startGraph("http://localhost:7474/db/data/")
+clear(graph, F)
+
+
+#First let's start parse genemania data, there are 553 files
+setwd("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens");
+allFiles <-list.files();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
