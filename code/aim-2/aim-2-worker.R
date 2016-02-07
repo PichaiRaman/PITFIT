@@ -8,6 +8,8 @@
 
 #call libraries
 library("stringr");
+library("RNeo4j")
+graph = startGraph("http://localhost:7474/db/data/")
 
 
 #Read in list of gene names
@@ -42,6 +44,43 @@ rownames(tmData) <- tmData[,1];
 
 #########Functions to add data and create score#############
 
+###############################################################
+#Oncogenic Proximity Section
+###############################################################
+
+distGenes <- function(x)
+{
+tmpGeneA <- "GPC2";
+tmpGeneB <- "MYC";
+query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneA,"' RETURN p", sep="");
+tmpNodeA <-getSingleNode(graph, query);
+query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneB,"' RETURN p", sep="");
+tmpNodeB <-getSingleNode(graph, query);
+}
+distOncogene <- function(x)
+{
+query = "MATCH (p:Gene) WHERE p.name = 'MYC' RETURN p"
+nodeX <- getSingleNode(graph, query);
+
+}
+
+
+minDistOncogene <- function(x)
+{
+
+
+
+
+}
+
+
+###############################################################
+#End Oncogenic Proximity Section
+###############################################################
+
+
+
+
 #Function to add druggability score
 isDruggable <- function(output)
 {
@@ -74,13 +113,17 @@ tmpOut <- length(intersect(tmpOut, cancGene[,1]));
 isTM <- function(output)
 {
 tmpGenes <- as.character(output[,1]);
-myOut <- tmData[tmpGenes,5];
+myOut <- tmData[tmpGenes,6];
 myOut[is.na(myOut)] <- 0;
 ifelse(myOut==1, "Yes", "No");
 myOut <- data.frame(myOut);
 colnames(myOut) <- c("isTM");
 myOut <- data.frame(output, myOut);
 }
+
+
+
+
 
 
 
@@ -102,6 +145,10 @@ output <- isRegByCancerTxnFactor(output);
 
 #Add tm piece
 output <- isTM(output);
+
+#Add Oncogenic Proximity
+output <- minDistOncogene(output);
+
 
 return(output);
 }
