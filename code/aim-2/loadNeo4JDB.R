@@ -57,6 +57,7 @@ for(i in 1:length(interactionFiles))
 {
 intDFTmp <- read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens/", interactionFiles[i], sep=""), stringsAsFactors=F);
 uniqueGenes <- unique(c(uniqueGenes, intDFTmp[,1], intDFTmp[,2]));
+print(paste(i, " ", length(uniqueGenes)));
 }
 
 
