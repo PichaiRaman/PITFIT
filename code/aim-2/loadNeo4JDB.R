@@ -24,6 +24,8 @@ clear(graph, F)
 #First let's start parse genemania data, there are 553 files
 setwd("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens");
 allFiles <-list.files();
+interactionFilesType <- c("Physi", "Predi", "Genet", "Co-lo", "Co-ex", "Pathw");
+interactionFiles <- allFiles[substring(allFiles, 1,5)%in%interactionFilesType];
 
 #Need Cancer Gene Census
 cancGeneCens <- read.delim("/home/ramanp/pitfit/data/CancerGeneCensus.tsv", stringsAsFactors=F);
@@ -34,6 +36,8 @@ cancGene <- cancGene[,1]
 #Mapping file to convert ID's
 mappingFile <- read.delim("identifier_mappings.txt");
 mappingFile <- mappingFile[mappingFile[,3]=="Gene Name",1:2];
+
+
 
 
 
@@ -83,7 +87,34 @@ createNode(graph, "Gene", name=as.character(uniqueGenes[i,1]), CancerGene=as.cha
 #Load all the edges
 ########################################################
 
-for(i in 1:
+#Main Function to add edges
+addEdge <- function(x)
+{
+tmpGeneA <- as.character(x[1]);
+tmpGeneB <- as.character(x[2]);
+tmpWeight <- as.numeric(x[3]);
+tmpSource <- as.character(x[4]);
+tmpType <- as.character(x[5]);
+
+query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneA,"' RETURN p", sep="");
+tmpNodeA <-getSingleNode(graph, query);
+query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneB,"' RETURN p", sep="");
+tmpNodeB <-getSingleNode(graph, query);
+createRel(tmpNodeA, tmpType, tmpNodeB, weight=tmpWeight, source=tmpSource)
+}
+
+for(i in 1:length(interactionFiles[1:100]))
+{
+intDFTmp <- data.frame(read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens/", interactionFiles[i], sep=""), stringsAsFactors=F), gsub(".txt", "", interactionFiles[1]));
+colnames(intDFTmp)[4] <- "source"
+intDFTmp[,"Type"] <- pullOutStem(intDFTmp[,"source"]);
+intDFTmp[,1] <- convertID(intDFTmp[,1]);
+intDFTmp[,2] <- convertID(intDFTmp[,2]);
+apply(intDFTmp[1:10,], FUN=addEdge, MARGIN=1);
+print(paste("loaded file", i));
+}
+
+
 
 
 
