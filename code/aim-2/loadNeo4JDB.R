@@ -79,6 +79,11 @@ for(i in 1:length(uniqueGenes[,1]))
 createNode(graph, "Gene", name=as.character(uniqueGenes[i,1]), CancerGene=as.character(uniqueGenes[i,2]))
 }
 
+########################################################
+#Load all the edges
+########################################################
+
+for(i in 1:
 
 
 
