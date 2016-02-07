@@ -112,7 +112,7 @@ colnames(intDFTmp)[4] <- "source"
 intDFTmp[,"Type"] <- pullOutStem(intDFTmp[,"source"]);
 intDFTmp[,1] <- convertID(intDFTmp[,1]);
 intDFTmp[,2] <- convertID(intDFTmp[,2]);
-apply(intDFTmp[1:10,], FUN=addEdge, MARGIN=1);
+apply(intDFTmp, FUN=addEdge, MARGIN=1);
 print(paste("loaded file", i, "file size is", nrow(intDFTmp)));
 }
 
