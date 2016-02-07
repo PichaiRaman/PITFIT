@@ -34,6 +34,14 @@ druggable <- druggable[1:3];
 cancGeneCens <- read.delim("../../data/CancerGeneCensus.tsv", stringsAsFactors=F);
 cancGene <- cancGeneCens[,c("Gene.Symbol", "Tumour.Types.Somatic.")];
 colnames(cancGene) <- c("cgc_Gene", "cgc_Tumour.Type")
+cancGene <- cancGene[,1];
+
+#only take genes that are in network
+query <- "match (n) return n.name"
+allNetGenes <- as.character(cypher(graph, query)[,1]);
+cancGene <- intersect(cancGene, allNetGenes);
+
+
 #####################################################
 
 #Read & format tm data#####################
@@ -48,23 +56,27 @@ rownames(tmData) <- tmData[,1];
 #Oncogenic Proximity Section
 ###############################################################
 
-distGenes <- function(x)
+distGenes <- function(tmpGeneA, tmpGeneB)
 {
-tmpGeneA <- "MYCN";
-tmpGeneB <- "MYC";
+p <-NULL;
+n <- NA;
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneA,"' RETURN p", sep="");
 tmpNodeA <-getSingleNode(graph, query);
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneB,"' RETURN p", sep="");
 tmpNodeB <-getSingleNode(graph, query);
 p = shortestPath(tmpNodeA, "ULINK", tmpNodeB, max_depth=10)
-n = nodes(p)
-sapply(n, "[[", "name")
+  
+  if(!is.null(p))
+  {
+    n <- paste(sapply(nodes(p), "[[", "name"), collapse=", ");
+  }
+out <- c(p[[1]]);
+return(out);
 }
+
 distOncogene <- function(x)
 {
-query = "MATCH (p:Gene) WHERE p.name = 'MYC' RETURN p"
-nodeX <- getSingleNode(graph, query);
-
+output <- data.frame(sapply(cancGene, FUN=distGenes, x));
 }
 
 
