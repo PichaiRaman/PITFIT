@@ -102,7 +102,7 @@ query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneA,"' RETURN p", sep="");
 tmpNodeA <-getSingleNode(graph, query);
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneB,"' RETURN p", sep="");
 tmpNodeB <-getSingleNode(graph, query);
-createRel(tmpNodeA, tmpType, tmpNodeB, weight=tmpWeight, source=tmpSource)
+createRel(tmpNodeA, "ULINK", tmpNodeB, weight=tmpWeight, source=tmpSource, sourceType=tmpType)
 }
 
 for(i in 1:length(interactionFiles[1:100]))
