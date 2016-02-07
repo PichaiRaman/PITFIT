@@ -69,7 +69,7 @@ print("started adding nodes");
 
 #Find the unique nodes
 uniqueGenes <- c();
-for(i in 1:length(interactionFiles[1:100]))
+for(i in 1:length(interactionFiles))
 {
 intDFTmp <- read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens/", interactionFiles[i], sep=""), stringsAsFactors=F);
 uniqueGenes <- unique(c(uniqueGenes, intDFTmp[,1], intDFTmp[,2]));
@@ -105,15 +105,15 @@ tmpNodeB <-getSingleNode(graph, query);
 createRel(tmpNodeA, "ULINK", tmpNodeB, weight=tmpWeight, source=tmpSource, sourceType=tmpType)
 }
 
-for(i in 1:length(interactionFiles[1:100]))
+for(i in 1:length(interactionFiles))
 {
-intDFTmp <- data.frame(read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens/", interactionFiles[i], sep=""), stringsAsFactors=F), gsub(".txt", "", interactionFiles[1]));
+intDFTmp <- data.frame(read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens/", interactionFiles[i], sep=""), stringsAsFactors=F), gsub(".txt", "", interactionFiles[i]));
 colnames(intDFTmp)[4] <- "source"
 intDFTmp[,"Type"] <- pullOutStem(intDFTmp[,"source"]);
 intDFTmp[,1] <- convertID(intDFTmp[,1]);
 intDFTmp[,2] <- convertID(intDFTmp[,2]);
 apply(intDFTmp[1:10,], FUN=addEdge, MARGIN=1);
-print(paste("loaded file", i));
+print(paste("loaded file", i, "file size is", nrow(intDFTmp)));
 }
 
 
