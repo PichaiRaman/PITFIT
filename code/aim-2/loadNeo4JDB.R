@@ -25,9 +25,17 @@ clear(graph, F)
 setwd("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens");
 allFiles <-list.files();
 
+#Need Cancer Gene Census
+cancGeneCens <- read.delim("/home/ramanp/pitfit/data/CancerGeneCensus.tsv", stringsAsFactors=F);
+cancGene <- cancGeneCens[,c("Gene.Symbol", "Tumour.Types.Somatic.")];
+colnames(cancGene) <- c("cgc_Gene", "cgc_Tumour.Type")
+cancGene <- cancGene[,1]
+
 #Mapping file to convert ID's
 mappingFile <- read.delim("identifier_mappings.txt");
 mappingFile <- mappingFile[mappingFile[,3]=="Gene Name",1:2];
+
+
 
 
 #Function to convert ID's
@@ -50,7 +58,9 @@ x <- gsub("Pathw", "Pathway", x);
 return(x);
 }
 
-
+########################################################
+#Load all the nodes
+########################################################
 #Find the unique nodes
 uniqueGenes <- c();
 for(i in 1:length(interactionFiles))
@@ -59,8 +69,15 @@ intDFTmp <- read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/d
 uniqueGenes <- unique(c(uniqueGenes, intDFTmp[,1], intDFTmp[,2]));
 print(paste(i, " ", length(uniqueGenes)));
 }
+uniqueGenes <- unique(convertID(uniqueGenes));
+uniqueGenes <- data.frame(uniqueGenes);
+rownames(uniqueGenes) <- uniqueGenes[,1];
+uniqueGenes[,"isCancerGene"] <- uniqueGenes[,1]%in%cancGene;
 
-
+for(i in 1:length(uniqueGenes[,1]))
+{
+createNode(graph, "Gene", name=as.character(uniqueGenes[i,1]), CancerGene=as.character(uniqueGenes[i,2]))
+}
 
 
 
