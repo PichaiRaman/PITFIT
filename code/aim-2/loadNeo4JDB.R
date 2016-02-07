@@ -25,8 +25,39 @@ clear(graph, F)
 setwd("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens");
 allFiles <-list.files();
 
+#Mapping file to convert ID's
+mappingFile <- read.delim("identifier_mappings.txt");
+mappingFile <- mappingFile[mappingFile[,3]=="Gene Name",1:2];
 
 
+#Function to convert ID's
+convertID <- function(x)
+{
+rownames(mappingFile) <- mappingFile[,1];
+y <- mappingFile[x,2];
+return(as.character(y));
+}
+#Function to pull out stem
+pullOutStem <- function(x)
+{
+x <-substring(x, 1,5);
+x <- gsub("Physi", "Physical_Interaction", x);
+x <- gsub("Predi", "Predicted_Interaction", x);
+x <- gsub("Genet", "Genetic_Interactions", x);
+x <- gsub("Co-lo", "Co-localization", x);
+x <- gsub("Co-ex", "Co-expression", x);
+x <- gsub("Pathw", "Pathway", x);
+return(x);
+}
+
+
+#Find the unique nodes
+uniqueGenes <- c();
+for(i in 1:length(interactionFiles))
+{
+intDFTmp <- read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens/", interactionFiles[i], sep=""), stringsAsFactors=F);
+uniqueGenes <- unique(c(uniqueGenes, intDFTmp[,1], intDFTmp[,2]));
+}
 
 
 
