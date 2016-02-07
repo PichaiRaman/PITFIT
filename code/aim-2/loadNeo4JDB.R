@@ -65,9 +65,11 @@ return(x);
 ########################################################
 #Load all the nodes
 ########################################################
+print("started adding nodes");
+
 #Find the unique nodes
 uniqueGenes <- c();
-for(i in 1:length(interactionFiles))
+for(i in 1:length(interactionFiles[1:100]))
 {
 intDFTmp <- read.delim(paste("/home/ramanp/pitfit/data/GeneMania/genemania.org/data/current/Homo_sapiens/", interactionFiles[i], sep=""), stringsAsFactors=F);
 uniqueGenes <- unique(c(uniqueGenes, intDFTmp[,1], intDFTmp[,2]));
@@ -86,7 +88,7 @@ createNode(graph, "Gene", name=as.character(uniqueGenes[i,1]), CancerGene=as.cha
 ########################################################
 #Load all the edges
 ########################################################
-
+print("started adding edges");
 #Main Function to add edges
 addEdge <- function(x)
 {
