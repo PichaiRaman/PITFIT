@@ -98,11 +98,12 @@ tmpWeight <- as.numeric(x[3]);
 tmpSource <- as.character(x[4]);
 tmpType <- as.character(x[5]);
 
+print(paste("adding genes", tmpGeneA, tmpGeneB));
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneA,"' RETURN p", sep="");
 tmpNodeA <-getSingleNode(graph, query);
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneB,"' RETURN p", sep="");
 tmpNodeB <-getSingleNode(graph, query);
-  if(!is.null(tmpNodeB)&&!is.null(tmpNodeB))
+  if(!is.null(tmpNodeA)&&!is.null(tmpNodeB))
   {
   createRel(tmpNodeA, "ULINK", tmpNodeB, weight=tmpWeight, source=tmpSource, sourceType=tmpType)
   }
