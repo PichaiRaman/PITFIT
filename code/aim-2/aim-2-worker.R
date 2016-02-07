@@ -50,12 +50,15 @@ rownames(tmData) <- tmData[,1];
 
 distGenes <- function(x)
 {
-tmpGeneA <- "GPC2";
+tmpGeneA <- "MYCN";
 tmpGeneB <- "MYC";
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneA,"' RETURN p", sep="");
 tmpNodeA <-getSingleNode(graph, query);
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneB,"' RETURN p", sep="");
 tmpNodeB <-getSingleNode(graph, query);
+p = shortestPath(tmpNodeA, "ULINK", tmpNodeB, max_depth=10)
+n = nodes(p)
+sapply(n, "[[", "name")
 }
 distOncogene <- function(x)
 {
