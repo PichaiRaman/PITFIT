@@ -58,6 +58,7 @@ rownames(tmData) <- tmData[,1];
 
 distGenes <- function(tmpGeneA, tmpGeneB)
 {
+print(tmpGeneA);
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneA,"' RETURN p", sep="");
 tmpNodeA <-getSingleNode(graph, query);
 query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneB,"' RETURN p", sep="");
@@ -114,7 +115,7 @@ tmpOut <- paste(tmpOut, collapse=", ")
 txnRegHelperScore <- function(geneName)
 {
 tmpOut <- txnFactor_genes[[geneName]]
-tmpOut <- length(intersect(tmpOut, cancGene[,1]));
+tmpOut <- length(intersect(tmpOut, cancGene));
 }
 
 #Function to see if it is a TM Protein 
@@ -148,11 +149,11 @@ colnames(output) <- c("Cancer", "Gene");
 #Add Druggability score to genes
 output <- isDruggable(output);
 
-#Add regulation piece
-output <- isRegByCancerTxnFactor(output);
-
 #Add tm piece
 output <- isTM(output);
+
+#Add regulation piece
+output <- isRegByCancerTxnFactor(output);
 
 #Add Oncogenic Proximity
 output <- minDistOncogene(output);
