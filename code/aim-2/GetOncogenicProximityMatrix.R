@@ -55,6 +55,7 @@ return(out);
 
 distOncogene <- function(x)
 {
+print(x);
 output <- as.numeric(sapply(cancGene, FUN=distGenes, x));
 }
 
