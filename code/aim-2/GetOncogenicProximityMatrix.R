@@ -11,8 +11,9 @@
 
 #call libraries
 library("stringr");
-library("RNeo4j")
+library("RNeo4j");
 library("gdata");
+library("snow");
 
 graph = startGraph("http://localhost:7474/db/data/")
 
@@ -59,8 +60,21 @@ print(x);
 output <- as.numeric(sapply(cancGene, FUN=distGenes, x));
 }
 
-OncProxMat <- data.frame(do.call(rbind, lapply(featureList, FUN=distOncogene)));
-rownames(OncProxMat) <- featureList;
+
+clus <- makeCluster(20);
+print("Started cluster");
+clusterExport(clus, "featureList");
+clusterExport(clus, "cancGene");
+clusterExport(clus, "distGenes");
+clusterExport(clus, "distOncogene");
+clusterExport(clus, "featureList");
+clusterExport(clus, "graph");
+clusterExport(clus, "getSingleNode");
+clusterExport(clus, "shortestPath");
+myoutput <- parSapply(clus, featureList, FUN=distOncogene);
+stopCluster(clus);
+
+OncProxMat <- data.frame(t(myoutput));
 colnames(OncProxMat) <- cancGene;
 keep(OncProxMat, sure=T);
 save.image("OncProx.RData");
