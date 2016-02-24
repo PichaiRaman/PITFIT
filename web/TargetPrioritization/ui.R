@@ -19,7 +19,7 @@ shinyUI(fluidPage(
                      "Prostate TCGA" = "prad")),
       br(),
       
-      selectizeInput('gene', 'Enter Feature', choices = 'FOXM1_Exp', multiple=TRUE),
+      selectizeInput('gene', 'Enter Feature', choices = 'FOXM1', multiple=TRUE),
 
 	submitButton("Run"),
 br(),
