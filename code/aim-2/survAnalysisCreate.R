@@ -4,6 +4,36 @@
 #
 ##############################################
 
+#Call Libraries
+library("survival");
+
+cleanFormat <- function(annot, expr)
+{
+#Get appropriate columns for annot and recode
+annot <- annot_ov[,c("PATIENT_ID", "OS_MONTHS", "OS_STATUS")];
+annot <- na.omit(annot);
+
+
+
+}
+
+
+#ovarian
+annot_ov <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/ov/tcga/data_bcr_clinical_data.txt");
+exprs_ov <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/ov/tcga/data_RNA_Seq_v2_expression_median.txt")
+ov <- cleanFormat(annot_ov, exprs_ov);
+
+
+#prostate
+annot_pr <- read.delim("../data/raw/prca/annot.txt");
+exprs_pr <- read.delim("../data/raw/prca/exprs.txt")
+pr <- list(exprs_pr, annot_pr);
+
+#head and neck
+annot_pa <- read.delim("../data/raw/paad/annot.txt");
+exprs_pa <- read.delim("../data/raw/paad/exprs.txt")
+hn <- list(exprs_pa, annot_pa);
+
 
 
 coxReg <- function(genes, myData)
@@ -28,18 +58,3 @@ coxReg <- function(genes, myData)
 
 
 
-
-#ovarian
-annot_ov <- read.delim("../data/raw/ovca/annot.txt");
-exprs_ov <- read.delim("../data/raw/ovca/exprs.txt")
-ov <- list(exprs_ov, annot_ov);
-
-#prostate
-annot_pr <- read.delim("../data/raw/prca/annot.txt");
-exprs_pr <- read.delim("../data/raw/prca/exprs.txt")
-pr <- list(exprs_pr, annot_pr);
-
-#head and neck
-annot_pa <- read.delim("../data/raw/hnca/annot.txt");
-exprs_pa <- read.delim("../data/raw/hnca/exprs.txt")
-hn <- list(exprs_hn, annot_hn);
