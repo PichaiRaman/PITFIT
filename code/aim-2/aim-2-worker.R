@@ -156,7 +156,7 @@ output <- isTM(output);
 output <- isRegByCancerTxnFactor(output);
 
 #Add Oncogenic Proximity
-output <- minDistOncogene(output);
+#output <- minDistOncogene(output);
 
 
 return(output);
