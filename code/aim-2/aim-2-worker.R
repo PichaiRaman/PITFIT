@@ -53,7 +53,7 @@ rownames(tmData) <- tmData[,1];
 #########Functions to add data and create score#############
 
 ###############################################################
-#Oncogenic Proximity Section
+#1. Oncogenic Proximity Section
 ###############################################################
 
 distGenes <- function(tmpGeneA, tmpGeneB)
@@ -82,22 +82,13 @@ minDistOncogene <- function(x)
 
 }
 
-
 ###############################################################
 #End Oncogenic Proximity Section
 ###############################################################
 
-
-
-
-#Function to add druggability score
-isDruggable <- function(output)
-{
-tmpDruggable <- merge(output, druggable, by.x="Gene", by.y="Gene", all.x=T);
-tmpDruggable[is.na(tmpDruggable[,"Sources_Druggability"]),"Sources_Druggability"] <- "NONE";
-tmpDruggable[is.na(tmpDruggable[,"Score_Druggability"]),"Score_Druggability"] <- 0;
-return(tmpDruggable);
-}
+###############################################################
+#2. Oncogenic Regulation Section
+###############################################################
 
 #Function to see if known to be regulated by a txnFactor
 isRegByCancerTxnFactor <- function(output)
@@ -118,6 +109,48 @@ tmpOut <- txnFactor_genes[[geneName]]
 tmpOut <- length(intersect(tmpOut, cancGene));
 }
 
+
+###############################################################
+#End Oncogenic Regulation Section
+###############################################################
+
+
+
+###############################################################
+#3. Cancer Relevance Section
+###############################################################
+
+#Need to complete this
+
+###############################################################
+#End Cancer Relevance Section
+###############################################################
+
+
+
+###############################################################
+#4. Druggability Section
+###############################################################
+
+#Function to add druggability score
+isDruggable <- function(output)
+{
+tmpDruggable <- merge(output, druggable, by.x="Gene", by.y="Gene", all.x=T);
+tmpDruggable[is.na(tmpDruggable[,"Sources_Druggability"]),"Sources_Druggability"] <- "NONE";
+tmpDruggable[is.na(tmpDruggable[,"Score_Druggability"]),"Score_Druggability"] <- 0;
+return(tmpDruggable);
+}
+
+###############################################################
+#End Druggability Section
+###############################################################
+
+
+###############################################################
+#5. TM Section
+###############################################################
+
+
 #Function to see if it is a TM Protein 
 isTM <- function(output)
 {
@@ -131,6 +164,33 @@ myOut <- data.frame(output, myOut);
 }
 
 
+###############################################################
+#5. End TM Section
+###############################################################
+
+
+
+###############################################################
+#6. Norm Tissue Section
+###############################################################
+
+
+#Function to see if it is a TM Protein 
+isTM <- function(output)
+{
+tmpGenes <- as.character(output[,1]);
+myOut <- tmData[tmpGenes,6];
+myOut[is.na(myOut)] <- 0;
+ifelse(myOut==1, "Yes", "No");
+myOut <- data.frame(myOut);
+colnames(myOut) <- c("isTM");
+myOut <- data.frame(output, myOut);
+}
+
+
+###############################################################
+#6. End Norm Tissue 
+###############################################################
 
 
 
@@ -146,17 +206,18 @@ pitfitAnalyzeAim2 <- function(myCancer, geneList)
 output <- data.frame(myCancer, geneList);
 colnames(output) <- c("Cancer", "Gene");
 
-#Add Druggability score to genes
-output <- isDruggable(output);
+#Add 1. Oncogenic Proximity piece
+#output <- minDistOncogene(output);
 
-#Add tm piece
-output <- isTM(output);
-
-#Add regulation piece
+#Add 2. Oncogenic regulation piece
 output <- isRegByCancerTxnFactor(output);
 
-#Add Oncogenic Proximity
-#output <- minDistOncogene(output);
+
+#Add 4. Druggability piece
+output <- isDruggable(output);
+
+#Add 5. TM piece
+output <- isTM(output);
 
 
 return(output);
