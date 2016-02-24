@@ -49,6 +49,11 @@ tmData <- read.delim("../../data/tmList.txt");
 rownames(tmData) <- tmData[,1];
 #####################################################
 
+#Read & format normal tissue data###################
+
+normExp <- read.delim("../../data/normalExpressionScore.txt");
+rownames(normExp) <- normExp[,1];
+#####################################################
 
 #########Functions to add data and create score#############
 
@@ -176,14 +181,13 @@ myOut <- data.frame(output, myOut);
 
 
 #Function to see if it is a TM Protein 
-isTM <- function(output)
+normExpProf <- function(output)
 {
-tmpGenes <- as.character(output[,1]);
-myOut <- tmData[tmpGenes,6];
+tmpGenes <- as.character(output[,2]);
+myOut <- normExp[tmpGenes,5];
 myOut[is.na(myOut)] <- 0;
-ifelse(myOut==1, "Yes", "No");
 myOut <- data.frame(myOut);
-colnames(myOut) <- c("isTM");
+colnames(myOut) <- c("NormExpProfile");
 myOut <- data.frame(output, myOut);
 }
 
@@ -218,6 +222,9 @@ output <- isDruggable(output);
 
 #Add 5. TM piece
 output <- isTM(output);
+
+#Add 6. Normal Expression piece
+output <- normExpProf(output);
 
 
 return(output);
