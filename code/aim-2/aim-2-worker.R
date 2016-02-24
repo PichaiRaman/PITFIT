@@ -98,7 +98,7 @@ minDistOncogene <- function(x)
 #Function to see if known to be regulated by a txnFactor
 isRegByCancerTxnFactor <- function(output)
 {
-tmpGenes <- as.character(output[,1]);
+tmpGenes <- as.character(output[,"Gene"]);
 myOut <- data.frame(sapply(tmpGenes, FUN=txnRegHelper), sapply(tmpGenes, FUN=txnRegHelperScore))
 colnames(myOut) <- c("TF_Regulation", "Score_Regulation");
 myOut <- data.frame(output, myOut);
@@ -112,6 +112,7 @@ txnRegHelperScore <- function(geneName)
 {
 tmpOut <- txnFactor_genes[[geneName]]
 tmpOut <- length(intersect(tmpOut, cancGene));
+ifelse(tmpOut>1, 1, 0);
 }
 
 
@@ -159,7 +160,7 @@ return(tmpDruggable);
 #Function to see if it is a TM Protein 
 isTM <- function(output)
 {
-tmpGenes <- as.character(output[,1]);
+tmpGenes <- as.character(output[,"Gene"]);
 myOut <- tmData[tmpGenes,6];
 myOut[is.na(myOut)] <- 0;
 ifelse(myOut==1, "Yes", "No");
@@ -183,7 +184,7 @@ myOut <- data.frame(output, myOut);
 #Function to see if it is a TM Protein 
 normExpProf <- function(output)
 {
-tmpGenes <- as.character(output[,2]);
+tmpGenes <- as.character(output[,"Gene"]);
 myOut <- normExp[tmpGenes,5];
 myOut[is.na(myOut)] <- 0;
 myOut <- data.frame(myOut);
@@ -216,6 +217,8 @@ colnames(output) <- c("Cancer", "Gene");
 #Add 2. Oncogenic regulation piece
 output <- isRegByCancerTxnFactor(output);
 
+#Add 3. Cancer Relevance piece
+#output <- isCancRel(output);
 
 #Add 4. Druggability piece
 output <- isDruggable(output);
@@ -225,7 +228,6 @@ output <- isTM(output);
 
 #Add 6. Normal Expression piece
 output <- normExpProf(output);
-
 
 return(output);
 }
