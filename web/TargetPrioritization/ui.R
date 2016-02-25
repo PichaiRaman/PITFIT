@@ -19,8 +19,7 @@ shinyUI(fluidPage(
                      "Prostate TCGA" = "prad")),
       br(),
       
-      selectizeInput('gene', 'Enter Feature', choices = 'FOXM1', multiple=TRUE),
-	tags$textarea(id="foo", rows=3, cols=40, "Default value"),
+	tags$textarea(id="foo", rows=20, cols=40, "Default value"),
 
 	submitButton("Run"),
 br(),
