@@ -55,6 +55,12 @@ normExp <- read.delim("../../data/normalExpressionScore.txt");
 rownames(normExp) <- normExp[,1];
 #####################################################
 
+#Read & format normal cancer Relevence data###################
+
+cancRel <- read.delim("../../data/CancerRelSurv.txt");
+#####################################################
+
+
 #########Functions to add data and create score#############
 
 ###############################################################
@@ -126,8 +132,13 @@ ifelse(tmpOut>1, 1, 0);
 #3. Cancer Relevance Section
 ###############################################################
 
-#Need to complete this
-
+isCancRel <- function(output)
+{
+tmpGenes <- as.character(output[,"Gene"]);
+survPvals <- cancRel[tmpGenes,unique(output[,"Cancer"])]
+cancRelScore <- ifelse(survPvals<.05, 1, 0);
+output <- data.frame(output, survPvals, cancRelScore);
+}
 ###############################################################
 #End Cancer Relevance Section
 ###############################################################
