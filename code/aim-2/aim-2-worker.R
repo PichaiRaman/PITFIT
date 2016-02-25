@@ -9,6 +9,7 @@
 #call libraries
 library("stringr");
 library("RNeo4j")
+library("lsa")
 graph = startGraph("http://localhost:7474/db/data/")
 
 
