@@ -48,7 +48,12 @@ exprs_pa <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/paad/tcga/data_RNA_Seq_v2
 pa <- cleanFormat(annot_pa, exprs_pa);
 
 
-geneCV <- rownames(ov[[1]]);
+geneCV1 <- rownames(ov[[1]]);
+geneCV2 <- rownames(pr[[1]]);
+geneCV3 <- rownames(pa[[1]]);
+geneCV <- intersect(geneCV1, geneCV2);
+geneCV <- intersect(geneCV, geneCV3);
+
 
 coxReg <- function(genes, myData)
 {
@@ -82,7 +87,7 @@ coxReg_pr <- sapply(geneCV, FUN=coxReg, pr);
 coxReg_pr <- data.frame(t(data.frame(coxReg_pr)));
 colnames(coxReg_pr) <- c("Gene", "P.Value");
 
-coxReg_pa <- sapply(geneCV[1:numGenes], FUN=coxReg, pa);
+coxReg_pa <- sapply(geneCV, FUN=coxReg, pa);
 coxReg_pa <- data.frame(t(data.frame(coxReg_pa)));
 colnames(coxReg_pa) <- c("Gene", "P.Value");
 
