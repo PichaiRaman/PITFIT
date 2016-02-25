@@ -37,7 +37,6 @@ annot_ov <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/ov/tcga/data_bcr_clinical
 exprs_ov <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/ov/tcga/data_RNA_Seq_v2_expression_median.txt")
 ov <- cleanFormat(annot_ov, exprs_ov);
 
-
 #prostate
 annot_pr <- read.delim("../data/raw/prca/annot.txt");
 exprs_pr <- read.delim("../data/raw/prca/exprs.txt")
@@ -49,6 +48,7 @@ exprs_pa <- read.delim("../data/raw/paad/exprs.txt")
 hn <- list(exprs_pa, annot_pa);
 
 
+geneCV <- rownames(ov[[1]]);
 
 coxReg <- function(genes, myData)
 {
@@ -69,6 +69,12 @@ coxReg <- function(genes, myData)
     out;
     
 }
+
+coxReg_ov <- sapply(geneCV[1:numGenes], FUN=coxReg, ov);
+coxReg_ov <- data.frame(t(data.frame(coxReg_ov)));
+colnames(coxReg_ov) <- c("Gene", "P.Value");
+
+
 
 
 
