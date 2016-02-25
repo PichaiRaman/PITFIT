@@ -60,6 +60,11 @@ rownames(normExp) <- normExp[,1];
 cancRel <- read.delim("../../data/CancerRelSurv.txt");
 #####################################################
 
+#Read Onc Proximity Matrix ##################
+
+load("../../data/OncProx.RData");
+
+#####################################################
 
 #########Functions to add data and create score#############
 
@@ -67,31 +72,27 @@ cancRel <- read.delim("../../data/CancerRelSurv.txt");
 #1. Oncogenic Proximity Section
 ###############################################################
 
-distGenes <- function(tmpGeneA, tmpGeneB)
+getOncProx <- function(output)
 {
-print(tmpGeneA);
-query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneA,"' RETURN p", sep="");
-tmpNodeA <-getSingleNode(graph, query);
-query = paste("MATCH (p:Gene) WHERE p.name ='",tmpGeneB,"' RETURN p", sep="");
-tmpNodeB <-getSingleNode(graph, query);
-p = shortestPath(tmpNodeA, "ULINK", tmpNodeB, max_depth=5)
-out <- c(p[[1]]);
-return(out);
+tmpGenes <- as.character(output[,"Gene"]);
+tmpOncProxMat <- OncProxMat[c(tmpGenes),]
+minDist <- apply(tmpOncProxMat, FUN=min, MARGIN=1);
+closeOncogenes <- apply(tmpOncProxMat, FUN=getMinOncogenes, MARGIN=1);
+tmpDF <- data.frame(minDist, closeOncogenes);
+colnames(tmpDF) <- c("MinDist", "CloseOncogenes");
+output <- cbind(output, tmpDF);
+return(output);
 }
 
-distOncogene <- function(x)
+getMinOncogenes <- function(x)
 {
-output <- sapply(cancGene, FUN=distGenes, x);
+minVal <- min(x);
+out <- names(x)[x==minVal]
+out <- paste(out, collapse=", ");
 }
 
 
-minDistOncogene <- function(x)
-{
 
-
-
-
-}
 
 ###############################################################
 #End Oncogenic Proximity Section
@@ -223,7 +224,7 @@ output <- data.frame(myCancer, geneList);
 colnames(output) <- c("Cancer", "Gene");
 
 #Add 1. Oncogenic Proximity piece
-#output <- minDistOncogene(output);
+output <- getOncProx(output);
 
 #Add 2. Oncogenic regulation piece
 output <- isRegByCancerTxnFactor(output);
