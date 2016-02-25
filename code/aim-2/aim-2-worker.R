@@ -229,7 +229,7 @@ colnames(output) <- c("Cancer", "Gene");
 output <- isRegByCancerTxnFactor(output);
 
 #Add 3. Cancer Relevance piece
-#output <- isCancRel(output);
+output <- isCancRel(output);
 
 #Add 4. Druggability piece
 output <- isDruggable(output);
