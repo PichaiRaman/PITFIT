@@ -20,6 +20,7 @@ shinyUI(fluidPage(
       br(),
       
       selectizeInput('gene', 'Enter Feature', choices = 'FOXM1', multiple=TRUE),
+	tags$textarea(id="foo", rows=3, cols=40, "Default value"),
 
 	submitButton("Run"),
 br(),
