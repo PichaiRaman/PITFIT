@@ -7,13 +7,27 @@
 #Call Libraries
 library("survival");
 
-cleanFormat <- function(annot, expr)
+cleanFormat <- function(annot, exprs)
 {
 #Get appropriate columns for annot and recode
-annot <- annot_ov[,c("PATIENT_ID", "OS_MONTHS", "OS_STATUS")];
+annot <- annot[,c("PATIENT_ID", "OS_MONTHS", "OS_STATUS")];
+colnames(annot) <- c("Patient", "TimeVar", "EventVar");
 annot <- na.omit(annot);
+annot[,"EventVar"] <- ifelse(annot[,"EventVar"]=="DECEASED", 1, 0);
+rownames(annot) <- annot[,1];
+annot <- annot[-1];
 
 
+#Format expression
+rownames(exprs) <- exprs[,1] 
+exprs <- exprs[-1:-2];
+colnames(exprs) <- gsub("\\.","-", colnames(exprs));
+colnames(exprs) <- substring(colnames(exprs), 1, 12);
+
+#Now get intersection of id's and conserve order
+intSamps <- intersect(colnames(exprs), rownames(annot));
+output <- list(exprs[,intSamps], annot[intSamps,]);
+return(output);
 
 }
 
@@ -48,7 +62,7 @@ coxReg <- function(genes, myData)
     if(names(temp)[temp == max(temp)]!=0)
     {
     tmpMeta[,"Gene"] <- log2(tmpMeta[,"Gene"]+1);
-    coxExpAnalysis <- coxph(formula = Surv(TimeVar, eventVar) ~ Gene, data = tmpMeta)
+    coxExpAnalysis <- coxph(formula = Surv(TimeVar, EventVar) ~ Gene, data = tmpMeta)
     pVal <- summary(coxExpAnalysis)[7][[1]][5];
     out <- c(genes, pVal);
     }
