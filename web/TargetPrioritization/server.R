@@ -46,7 +46,7 @@ shinyServer(function(input, output, session) {
       Sys.sleep(0.1)
     }
 
-  	myRes <- pitfitAnalyzeAim2(input$dataset,input$gene);
+  	myRes <- pitfitAnalyzeAim2(input$dataset,input$foo);
 globalResult <<- myRes; 
 myRes;
   })
