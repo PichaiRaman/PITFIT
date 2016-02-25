@@ -224,7 +224,7 @@ output[,"ADC_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=ADC);
 output[,"LMW_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=LMW);
 output[,"MAB_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=MAB);
 output[,"CAR_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=CAR);
-output[,"MIN_Score"] <- apply(output[13:16], FUN=min, MARGIN=1);
+output[,"MAX_Score"] <- apply(output[13:16], FUN=max, MARGIN=1);
 return(output);
 }
 
