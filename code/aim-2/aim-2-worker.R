@@ -209,8 +209,31 @@ myOut <- data.frame(output, myOut);
 #6. End Norm Tissue 
 ###############################################################
 
+###############################################################
+#7. Calculate Scores
+###############################################################
+ADC <- c(0,0,0,0,1,2);
+LMW <- c(3,1,1,2,0,0);
+MAB <- c(3,1,1,0,1,2);
+CAR <- c(0,0,0,0,1,3);
+
+getScore <- function(output)
+{
+outputTmp <- output[,c("MinDist", "Score_Regulation", "cancRelScore", "Score_Druggability", "isTM", "NormExpProfile")];
+output[,"ADC_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=ADC);
+output[,"LMW_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=LMW);
+output[,"MAB_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=MAB);
+output[,"CAR_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=CAR);
+output[,"MIN_Score"] <- apply(output[13:16], FUN=min, MARGIN=1);
+return(output);
+}
 
 
+
+
+###############################################################
+#7. End Calculate scores
+###############################################################
 
 
 ##############################
@@ -240,6 +263,10 @@ output <- isTM(output);
 
 #Add 6. Normal Expression piece
 output <- normExpProf(output);
+
+#Add 7. Scores
+output <- getScore(output);
+
 
 return(output);
 }
