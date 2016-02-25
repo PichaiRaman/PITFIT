@@ -45,8 +45,8 @@ shinyServer(function(input, output, session) {
       # Pause for 0.1 seconds to simulate a long computation.
       Sys.sleep(0.1)
     }
-
-  	myRes <- pitfitAnalyzeAim2(input$dataset,input$foo);
+    myGenes <- strsplit(input$foo, "\t"); 
+  	myRes <- pitfitAnalyzeAim2(input$dataset,);
 globalResult <<- myRes; 
 myRes;
   })
