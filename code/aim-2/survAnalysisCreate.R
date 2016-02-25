@@ -38,14 +38,14 @@ exprs_ov <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/ov/tcga/data_RNA_Seq_v2_e
 ov <- cleanFormat(annot_ov, exprs_ov);
 
 #prostate
-annot_pr <- read.delim("../data/raw/prca/annot.txt");
-exprs_pr <- read.delim("../data/raw/prca/exprs.txt")
-pr <- list(exprs_pr, annot_pr);
+annot_pr <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/prad/tcga/data_bcr_clinical_data.txt");
+exprs_pr <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/prad/tcga/data_RNA_Seq_v2_expression_median.txt")
+pr <- cleanFormat(annot_pr, exprs_pr);
 
 #head and neck
-annot_pa <- read.delim("../data/raw/paad/annot.txt");
-exprs_pa <- read.delim("../data/raw/paad/exprs.txt")
-hn <- list(exprs_pa, annot_pa);
+annot_pa <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/paad/tcga/data_bcr_clinical_data.txt");
+exprs_pa <- read.delim("/bigdata/PITFIT_Data/TCGA_Data/paad/tcga/data_RNA_Seq_v2_expression_median.txt")
+pa <- cleanFormat(annot_pa, exprs_pa);
 
 
 geneCV <- rownames(ov[[1]]);
@@ -64,16 +64,30 @@ coxReg <- function(genes, myData)
     tmpMeta[,"Gene"] <- log2(tmpMeta[,"Gene"]+1);
     coxExpAnalysis <- coxph(formula = Surv(TimeVar, EventVar) ~ Gene, data = tmpMeta)
     pVal <- summary(coxExpAnalysis)[7][[1]][5];
+        if(mean(tmpMeta[tmpMeta[,2]==0,3])>mean(tmpMeta[tmpMeta[,2]==1,3]))
+        {
+            pVal=1;
+        }
     out <- c(genes, pVal);
     }
     out;
     
 }
 
-coxReg_ov <- sapply(geneCV[1:numGenes], FUN=coxReg, ov);
+coxReg_ov <- sapply(geneCV, FUN=coxReg, ov);
 coxReg_ov <- data.frame(t(data.frame(coxReg_ov)));
 colnames(coxReg_ov) <- c("Gene", "P.Value");
 
+coxReg_pr <- sapply(geneCV, FUN=coxReg, pr);
+coxReg_pr <- data.frame(t(data.frame(coxReg_pr)));
+colnames(coxReg_pr) <- c("Gene", "P.Value");
+
+coxReg_pa <- sapply(geneCV[1:numGenes], FUN=coxReg, pa);
+coxReg_pa <- data.frame(t(data.frame(coxReg_pa)));
+colnames(coxReg_pa) <- c("Gene", "P.Value");
+
+coxReg_mat <- data.frame(coxReg_ov[2], coxReg_pr[2], coxReg_pa[2]);
+colnames(coxReg_mat) <- c("ov", "pr", "pa");
 
 
 
