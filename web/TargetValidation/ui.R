@@ -32,7 +32,7 @@ downloadButton('downloadData', 'Download')
     # of the generated distribution
     mainPanel(
       tabsetPanel(type = "tabs", 
-        tabPanel("Table", dataTableOutput(outputId="table")) 
+        tabPanel("Table", dataTableOutput(outputId="table")), 
         tabPanel("Heatmap", d3heatmapOutput("summary")) 
       )
     )
