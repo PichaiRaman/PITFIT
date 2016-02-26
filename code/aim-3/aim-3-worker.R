@@ -34,6 +34,13 @@ tmpDat <- tmpDat[-order(tmpDat)];
 }
 
 
+getBestSetOfLines <- function(canc, gene)
+{
+canc <- cancLookUp(canc);
+tmpDat <- ccleData[gene,grep(canc, colnames(ccleData))];
+tmpDat <- tmpDat[-order(tmpDat)];
+
+}
 
 
 
