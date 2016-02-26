@@ -33,7 +33,7 @@ downloadButton('downloadData', 'Download')
     mainPanel(
       tabsetPanel(type = "tabs", 
         tabPanel("Table", dataTableOutput(outputId="table")), 
-        tabPanel("Heatmap", d3heatmapOutput("summary")) 
+        tabPanel("Waterfall", plotOutput("summary")) 
       )
     )
   )
