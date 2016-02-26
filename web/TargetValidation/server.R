@@ -84,7 +84,7 @@ shinyServer(function(input, output, session) {
     }
 
     	myRes <- getSingleBestLine(input$dataset,input$foo)[[2]];
-
+  print(myRes);
  })
   
   
