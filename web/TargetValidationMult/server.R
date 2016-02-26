@@ -42,7 +42,7 @@ shinyServer(function(input, output, session) {
       Sys.sleep(0.1)
     }
 
-  	myRes <- getSingleBestLine(input$dataset,input$foo)[[1]];
+  	myRes <- getBestSetOfLines(input$dataset,input$foo, input$numLines)[[1]];
   })
 
 
@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
 
 
   # Generate a summary of the data
-  output$summary <- renderPlot({
+  output$summary <- renderD3heatmap({
   	
     input$submit # Re-run when button is clicked
 
@@ -83,8 +83,8 @@ shinyServer(function(input, output, session) {
       Sys.sleep(0.1)
     }
 
-    	myRes <- getSingleBestLine(input$dataset,input$foo)[[2]];
-  print(myRes);
+  	myRes <- getBestSetOfLines(input$dataset,input$foo, input$numLines)[[2]];
+  d3heatmap(as.matrix(myRes));
  })
   
   
