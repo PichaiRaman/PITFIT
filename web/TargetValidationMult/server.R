@@ -42,7 +42,7 @@ shinyServer(function(input, output, session) {
       Sys.sleep(0.1)
     }
    myGenes <- strsplit(input$foo, '\n')[[1]]; 
-  	myRes <- getBestSetOfLines(input$dataset,myGenes, input$numLines)[[1]];
+  	myRes <- getBestSetOfLines(input$dataset,myGenes, as.numeric(input$numLines))[[1]];
   })
 
 
@@ -83,7 +83,7 @@ shinyServer(function(input, output, session) {
       Sys.sleep(0.1)
     }
    myGenes <- strsplit(input$foo, '\n')[[1]]; 
-  	myRes <- getBestSetOfLines(input$dataset,myGenes, input$numLines)[[2]];
+  	myRes <- getBestSetOfLines(input$dataset,myGenes, as.numeric(input$numLines))[[2]];
   d3heatmap(as.matrix(myRes));
  })
   
