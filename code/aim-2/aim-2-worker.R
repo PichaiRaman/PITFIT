@@ -239,8 +239,14 @@ LMW <- LMW[LMW[,3]==1,];
 LMW <- LMW[LMW[,4]==2,];
 LMW <- as.matrix(LMW);
 
-
-MAB <- c(3,1,1,0,1,2);
+#Filter MAB
+MAB <- allComb[allComb[,1]==3,];
+MAB <- MAB[MAB[,2]==1,];
+MAB <- MAB[MAB[,3]==1,];
+MAB <- MAB[MAB[,4]%in%c(2,1,0),];
+MAB <- MAB[MAB[,5]==1,];
+MAB <- MAB[MAB[,6]%in%c(3,2),];
+MAB <- as.matrix(MAB);
 
 getADCScore <- function(outputTmp)
 {
@@ -255,7 +261,7 @@ tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=ADC[1,]);
 getCARScore <- function(outputTmp)
 {
 tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=CAR[1,]);
-  for(i in 2:(dim(ADC)[1]))
+  for(i in 2:(dim(CAR)[1]))
   {
    tmpDat <-  rbind(tmpDat, apply(outputTmp, FUN=cosine, MARGIN=1, y=CAR[i,]))
   }
@@ -266,7 +272,7 @@ tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=CAR[1,]);
 getLMWScore <- function(outputTmp)
 {
 tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=LMW[1,]);
-  for(i in 2:(dim(ADC)[1]))
+  for(i in 2:(dim(LMW)[1]))
   {
    tmpDat <-  rbind(tmpDat, apply(outputTmp, FUN=cosine, MARGIN=1, y=LMW[i,]))
   }
@@ -277,7 +283,7 @@ tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=LMW[1,]);
 getMABScore <- function(outputTmp)
 {
 tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=MAB[1,]);
-  for(i in 2:(dim(ADC)[1]))
+  for(i in 2:(dim(MAB)[1]))
   {
    tmpDat <-  rbind(tmpDat, apply(outputTmp, FUN=cosine, MARGIN=1, y=MAB[i,]))
   }
@@ -293,6 +299,7 @@ output[,"LMW_Score"] <- getLMWScore(outputTmp);
 output[,"MAB_Score"] <- getMABScore(outputTmp);
 output[,"CAR_Score"] <- getCARScore(outputTmp);
 output[,"MAX_Score"] <- apply(output[13:16], FUN=max, MARGIN=1);
+output <- output[order(-output[,"MAX_Score"]),];
 return(output);
 }
 
