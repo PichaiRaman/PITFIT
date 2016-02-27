@@ -10,6 +10,7 @@
 library("stringr");
 library("RNeo4j")
 library("lsa")
+library("gtools")
 graph = startGraph("http://localhost:7474/db/data/")
 
 
@@ -213,18 +214,84 @@ myOut <- data.frame(output, myOut);
 ###############################################################
 #7. Calculate Scores
 ###############################################################
-ADC <- c(0,0,0,0,1,2);
-LMW <- c(3,1,1,2,0,0);
+
+#create all permutaiton vector
+allComb <- data.frame(permutations(4, 6, c(0:3), T, T));
+allComb <- allComb[allComb[,2]%in%c(1,0),];
+allComb <- allComb[allComb[,3]%in%c(1,0),];
+allComb <- allComb[allComb[,4]%in%c(2,1,0),];
+allComb <- allComb[allComb[,5]%in%c(1,0),];
+
+#Filter ADC
+ADC <- allComb[allComb[,5]==1,];
+ADC <- ADC[ADC[,6]%in%c(3,2),];
+ADC <- as.matrix(ADC);
+
+#Filter CAR
+CAR <- allComb[allComb[,5]==1,];
+CAR <- CAR[CAR[,6]==3,];
+CAR <- as.matrix(CAR);
+
+#Filter LMW
+LMW <- allComb[allComb[,1]==3,];
+LMW <- LMW[LMW[,2]==1,];
+LMW <- LMW[LMW[,3]==1,];
+LMW <- LMW[LMW[,4]==2,];
+LMW <- as.matrix(LMW);
+
+
 MAB <- c(3,1,1,0,1,2);
-CAR <- c(0,0,0,0,1,3);
+
+getADCScore <- function(outputTmp)
+{
+tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=ADC[1,]);
+  for(i in 2:(dim(ADC)[1]))
+  {
+   tmpDat <-  rbind(tmpDat, apply(outputTmp, FUN=cosine, MARGIN=1, y=ADC[i,]))
+  }
+  finOut <- apply(tmpDat, FUN=max, MARGIN=2);
+}
+
+getCARScore <- function(outputTmp)
+{
+tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=CAR[1,]);
+  for(i in 2:(dim(ADC)[1]))
+  {
+   tmpDat <-  rbind(tmpDat, apply(outputTmp, FUN=cosine, MARGIN=1, y=CAR[i,]))
+  }
+  finOut <- apply(tmpDat, FUN=max, MARGIN=2);
+}
+
+
+getLMWScore <- function(outputTmp)
+{
+tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=LMW[1,]);
+  for(i in 2:(dim(ADC)[1]))
+  {
+   tmpDat <-  rbind(tmpDat, apply(outputTmp, FUN=cosine, MARGIN=1, y=LMW[i,]))
+  }
+  finOut <- apply(tmpDat, FUN=max, MARGIN=2);
+}
+
+
+getMABScore <- function(outputTmp)
+{
+tmpDat <- apply(outputTmp, FUN=cosine, MARGIN=1, y=MAB[1,]);
+  for(i in 2:(dim(ADC)[1]))
+  {
+   tmpDat <-  rbind(tmpDat, apply(outputTmp, FUN=cosine, MARGIN=1, y=MAB[i,]))
+  }
+  finOut <- apply(tmpDat, FUN=max, MARGIN=2);
+}
+
 
 getScore <- function(output)
 {
 outputTmp <- output[,c("MinDist", "Score_Regulation", "cancRelScore", "Score_Druggability", "isTM", "NormExpProfile")];
-output[,"ADC_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=ADC);
-output[,"LMW_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=LMW);
-output[,"MAB_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=MAB);
-output[,"CAR_Score"] <- apply(outputTmp, FUN=cosine, MARGIN=1, y=CAR);
+output[,"ADC_Score"] <- getADCScore(outputTmp);
+output[,"LMW_Score"] <- getLMWScore(outputTmp);
+output[,"MAB_Score"] <- getMABScore(outputTmp);
+output[,"CAR_Score"] <- getCARScore(outputTmp);
 output[,"MAX_Score"] <- apply(output[13:16], FUN=max, MARGIN=1);
 return(output);
 }
